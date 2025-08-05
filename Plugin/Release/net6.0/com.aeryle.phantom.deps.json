@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "com.aeryle.phantom/0.1.0-alpha": {
+        "runtime": {
+          "com.aeryle.phantom.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "com.aeryle.phantom/0.1.0-alpha": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

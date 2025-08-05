@@ -1,0 +1,17 @@
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/bin/Debug/net6.0/Plugin
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/bin/Debug/net6.0/Plugin.deps.json
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/bin/Debug/net6.0/Plugin.runtimeconfig.json
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/bin/Debug/net6.0/Plugin.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/bin/Debug/net6.0/Plugin.pdb
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfoInputs.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfo.cs
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.csproj.CoreCompileInputs.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.csproj.AssemblyReference.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/Release/net6.0/com.aeryle.phantom.deps.json
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/Release/net6.0/com.aeryle.phantom.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/Release/net6.0/com.aeryle.phantom.pdb
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/com.aeryle.phantom.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/refint/com.aeryle.phantom.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/com.aeryle.phantom.pdb
+/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/ref/com.aeryle.phantom.dll
