@@ -7,16 +7,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa4a2170-45d9-450f-84f9-f20e16625e73" name="Changes" comment="" />
+    <list default="true" id="fa4a2170-45d9-450f-84f9-f20e16625e73" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/Plugin.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/Plugin.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/PluginInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/PluginInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.GlobalUsings.g.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.GlobalUsings.g.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net6.0/Plugin.csproj.AssemblyReference.cache" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Plugin/Plugin.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/PluginInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/obj/Debug/net6.0/Plugin.GlobalUsings.g.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/252cb71905438821f1e92635e87995f3f87fc36e9e7d0368e4d72fdc67295f/MelonBase.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -25,21 +41,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;rider.code.cleanup.on.save&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.XML&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "rider.code.cleanup.on.save": "true",
+    "settings.editor.selected.configurable": "preferences.sourceCode.XML",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Plugin" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -88,13 +105,14 @@
       <updated>1754348364823</updated>
       <workItem from="1754348365223" duration="1258000" />
       <workItem from="1754349650742" duration="1542000" />
-      <workItem from="1754351302246" duration="1905000" />
+      <workItem from="1754351302246" duration="2527000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityProjectDiscoverer">
     <option name="hasUnityReference" value="true" />

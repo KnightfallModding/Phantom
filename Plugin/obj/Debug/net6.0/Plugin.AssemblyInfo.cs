@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("com.aeryle.phantom")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0-alpha")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0-alpha+9df24ba0fee509592eec22a2e664e8aa4ccf9b2e")]
 [assembly: System.Reflection.AssemblyProductAttribute("com.aeryle.phantom")]
 [assembly: System.Reflection.AssemblyTitleAttribute("com.aeryle.phantom")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]
