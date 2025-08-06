@@ -1,0 +1,105 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "com.aeryle.phantom/0.1.0-alpha": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/com.aeryle.phantom.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/com.aeryle.phantom.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "com.aeryle.phantom/0.1.0-alpha": {
+      "type": "project",
+      "path": "../Plugin/Plugin.csproj",
+      "msbuildProject": "../Plugin/Plugin.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "com.aeryle.phantom >= 0.1.0-alpha"
+    ]
+  },
+  "packageFolders": {
+    "/home/aeryle/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "0.1.0-alpha",
+    "restore": {
+      "projectUniqueName": "/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/Cheats.csproj",
+      "projectName": "phantom.plugin.cheats",
+      "projectPath": "/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/Cheats.csproj",
+      "packagesPath": "/home/aeryle/.nuget/packages/",
+      "outputPath": "/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/aeryle/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {
+            "/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/Plugin.csproj": {
+              "projectPath": "/home/aeryle/projects/mods/Knightfall/Phantom/Plugin/Plugin.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.36, 6.0.36]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.36, 6.0.36]"
+          }
+        ],
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.303/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

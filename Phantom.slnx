@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Cheats/Cheats.csproj" />
+  <Project Path="Plugin/Plugin.csproj" />
+</Solution>

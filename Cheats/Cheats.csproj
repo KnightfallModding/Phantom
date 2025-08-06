@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>13</LangVersion>
+
+    <OutputPath>Release</OutputPath>
+    <AssemblyName>phantom.plugin.cheats</AssemblyName>
+    <ProductName>Phantom</ProductName>
+    <Version>0.1.0-alpha</Version>
+
+    <AnalysisLevel>latest</AnalysisLevel>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Plugin/Plugin.csproj">
+      <Private>false</Private>
+      <CopyLocal>false</CopyLocal>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Import Project="../Libs.props"/>
+  <Import Project="../RuntimeLibs.props"/>
+
+  <Target Name="GeneratePluginInfos" BeforeTargets="Compile">
+    <WriteLinesToFile Overwrite="true" File="./CheatsInfo.cs" Lines="namespace Phantom.Plugins.Cheats%3B
+
+public static class CheatsInfo {
+  public const string ID = &quot;$(AssemblyName)&quot;%3B
+  public const string Name = &quot;$(ProductName)&quot;%3B
+  public const string Version = &quot;$(Version)&quot;%3B
+}
+"/>
+  </Target>
+</Project>

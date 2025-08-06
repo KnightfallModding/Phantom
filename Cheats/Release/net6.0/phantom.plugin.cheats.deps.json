@@ -1,0 +1,26 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "phantom.plugin.cheats/0.1.0-alpha": {
+        "dependencies": {
+          "com.aeryle.phantom": "0.1.0-alpha"
+        },
+        "runtime": {
+          "phantom.plugin.cheats.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "phantom.plugin.cheats/0.1.0-alpha": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

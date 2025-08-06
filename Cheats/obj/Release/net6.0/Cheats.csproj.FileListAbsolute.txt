@@ -1,0 +1,13 @@
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.csproj.AssemblyReference.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.GeneratedMSBuildEditorConfig.editorconfig
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.AssemblyInfoInputs.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.AssemblyInfo.cs
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.csproj.CoreCompileInputs.cache
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/Cheats.sourcelink.json
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/Release/net6.0/phantom.plugin.cheats.deps.json
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/Release/net6.0/phantom.plugin.cheats.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/Release/net6.0/phantom.plugin.cheats.pdb
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/phantom.plugin.cheats.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/refint/phantom.plugin.cheats.dll
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/phantom.plugin.cheats.pdb
+/home/aeryle/projects/mods/Knightfall/Phantom/Cheats/obj/Release/net6.0/ref/phantom.plugin.cheats.dll
