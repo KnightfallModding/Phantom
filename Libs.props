@@ -1,0 +1,18 @@
+<Project>
+  <ItemGroup>
+    <!-- Test -->
+<!--    <ProjectReference-->
+<!--      Include="$(MSBuildThisFileDirectory)/HarmonyAnalyzers/HarmonyAnalyzers.csproj"-->
+<!--      OutputItemType="Analyzer"-->
+<!--      ReferenceOutputAssembly="false" />-->
+
+    <Reference Include="Il2cppmscorlib">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

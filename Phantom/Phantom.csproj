@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>Phantom</AssemblyName>
+    <Product>My first plugin</Product>
+    <Version>1.0.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>Phantom</RootNamespace>
+
+    <!-- Linting -->
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Build settings -->
+    <TargetFramework>net6.0</TargetFramework>
+    <DebugType>none</DebugType>
+    <OutputType>Library</OutputType>
+    <OutputPath>release</OutputPath>
+    <RootNamespace>Phantom</RootNamespace>
+
+    <!-- Meta settings -->
+    <AssemblyName>com.aeryle.phantom</AssemblyName>
+    <Product>Phantom</Product>
+    <ProductName>Phantom</ProductName>
+    <Author>Aeryle</Author>
+  </PropertyGroup>
+
+  <!-- Variables -->
+  <PropertyGroup>
+    <OutputDir>release/$(TargetFramework)</OutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(PhantomAssemblyName)' != ''">
+    <AssemblyName>$(PhantomAssemblyName)</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="Harmonize" Version="1.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+
+    <!-- MelonLoader libs -->
+    <Reference Include="MelonLoader">
+      <HintPath>$(SolutionDir)/Libs/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Harmony">
+      <HintPath>$(SolutionDir)/Libs/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="../Libs.props" />
+
+  <Target Name="WriteInformations" AfterTargets="Compile">
+    <WriteLinesToFile
+      File="PhantomInfo.cs"
+      Overwrite="true"
+      Lines="namespace Phantom%3B
+
+public static class PhantomInfo
+{
+    public const string Id = &quot;$(AssemblyName)&quot;%3B
+    public const string Name = &quot;$(ProductName)&quot;%3B
+    public const string Description = &quot;$(ProductName) is a Knightfall mod that extends the abilities of the game past their limits&quot;%3B
+    public const string Version = &quot;$(Version)&quot;%3B
+    public const string Author = &quot;$(Author)&quot;%3B
+}"
+    />
+  </Target>
+
+  <Target Name="CleanOutputDir" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="release" />
+  </Target>
+
+  <Target Name="CleanBuildArtifacts" AfterTargets="Build">
+    <Delete Files="$(OutputDir)/$(AssemblyName).deps.json" />
+  </Target>
+
+  <Target Name="BundleBuildArtifacts">
+    <Copy SourceFiles="@(RuntimeLibs)" DestinationFolder="$(OutputDir)/plugins/Libraries" />
+    <Move SourceFiles="$(OutputDir)/$(AssemblyName).dll" DestinationFolder="$(OutputDir)/Plugins" />
+    <ZipDirectory
+      SourceDirectory="$(OutputDir)"
+      DestinationFile="release/$(ProductName) v$(Version).zip"
+    />
+    <RemoveDir Directories="$(OutputDir)" />
+  </Target>
+</Project>

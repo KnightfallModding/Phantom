@@ -1,0 +1,9 @@
+*/bin/
+*/obj/
+*/release/
+
+# ReSharper / Rider configs
+*.sln.DotSettings.user
+
+# Build scripts
+*.fish
