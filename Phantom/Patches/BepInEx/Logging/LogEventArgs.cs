@@ -12,7 +12,6 @@ public static class LogEventArgsPatch
     public static bool ToStringLinePatch(LogEventArgs __instance, ref string __result)
     {
         __result = $"{__instance.Data}{Environment.NewLine}";
-        File.WriteAllText(Path.Combine(Paths.GameRootPath, "test.txt"), __result);
 
         return false;
     }

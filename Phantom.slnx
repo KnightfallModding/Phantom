@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="DearImGuiInjection/DearImGuiInjection.csproj" />
   <Project Path="Phantom/Phantom.csproj" />
 </Solution>

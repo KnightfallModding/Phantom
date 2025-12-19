@@ -1,5 +1,10 @@
 <Project>
   <ItemGroup>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(MSBuildThisFileDirectory)/Libs/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>

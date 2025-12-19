@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>preview</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- <DebugSymbols>true</DebugSymbols> -->
+    <!-- <DebugType>embedded</DebugType> -->
+    <!-- <Optimize>false</Optimize> -->
+    <!-- <DebugSymbols>false</DebugSymbols> -->
+    <!-- <DebugType>none</DebugType> -->
+    <!-- <Optimize>true</Optimize> -->
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <TargetFramework>net6.0</TargetFramework>
+
+    <OutputPath>release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="netstandard2.0.SharpDX" Version="4.2.1-beta0-g7abb72df54" />
+    <PackageReference Include="netstandard2.0.SharpDX.DXGI" Version="4.2.1-beta0-g7abb72df54" />
+    <PackageReference
+      Include="netstandard2.0.SharpDX.Direct3D11"
+      Version="4.2.1-beta0-g7abb72df54"
+    />
+    <PackageReference
+      Include="netstandard2.0.SharpDX.Direct3D12"
+      Version="4.2.1-beta0-g7abb72df54"
+    />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be*" PrivateAssets="all" />
+
+    <Reference Include="Il2cppmscorlib">
+      <HintPath>../Libs/Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine">
+      <HintPath>../Libs/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>../Libs/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

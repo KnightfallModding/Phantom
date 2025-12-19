@@ -48,6 +48,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+
+    <ProjectReference Include="../DearImGuiInjection/DearImGuiInjection.csproj" Private="false" />
   </ItemGroup>
 
   <Import Project="../Libs.props" />
