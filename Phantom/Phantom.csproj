@@ -43,20 +43,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Harmonize" Version="1.0.3">
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="Harmonize" Version="1.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-
-    <!-- MelonLoader libs -->
-    <Reference Include="MelonLoader">
-      <HintPath>$(SolutionDir)/Libs/MelonLoader.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Harmony">
-      <HintPath>$(SolutionDir)/Libs/0Harmony.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
   </ItemGroup>
 
   <Import Project="../Libs.props" />
@@ -65,15 +56,7 @@
     <WriteLinesToFile
       File="PhantomInfo.cs"
       Overwrite="true"
-      Lines="namespace Phantom%3B
-public static class PhantomInfo
-{
-    public const string Id = &quot;$(AssemblyName)&quot;%3B
-    public const string Name = &quot;$(ProductName)&quot;%3B
-    public const string Description = &quot;$(ProductName) is a Knightfall mod that extends the abilities of the game past their limits&quot;%3B
-    public const string Version = &quot;$(Version)&quot;%3B
-    public const string Author = &quot;$(Author)&quot;%3B
-}"
+      Lines="namespace Phantom%3B&#xD;&#xA;public static class PhantomInfo&#xD;&#xA;{&#xD;&#xA;    public const string Id = &quot;$(AssemblyName)&quot;%3B&#xD;&#xA;    public const string Name = &quot;$(ProductName)&quot;%3B&#xD;&#xA;    public const string Description = &quot;$(ProductName) is a Knightfall mod that extends the abilities of the game past their limits&quot;%3B&#xD;&#xA;    public const string Version = &quot;$(Version)&quot;%3B&#xD;&#xA;    public const string Author = &quot;$(Author)&quot;%3B&#xD;&#xA;}"
     />
   </Target>
 
@@ -87,7 +70,7 @@ public static class PhantomInfo
 
   <Target Name="BundleBuildArtifacts">
     <Copy SourceFiles="@(RuntimeLibs)" DestinationFolder="$(OutputDir)/plugins/Libraries" />
-    <Move SourceFiles="$(OutputDir)/$(AssemblyName).dll" DestinationFolder="$(OutputDir)/Plugins" />
+    <Move SourceFiles="$(OutputDir)/$(AssemblyName).dll" DestinationFolder="$(OutputDir)/plugins" />
     <ZipDirectory
       SourceDirectory="$(OutputDir)"
       DestinationFile="release/$(ProductName) v$(Version).zip"

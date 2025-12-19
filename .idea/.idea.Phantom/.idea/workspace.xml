@@ -8,7 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="082ae2ae-5ac7-42c1-84ec-68650a844fa1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs.props" beforeDir="false" afterPath="$PROJECT_DIR$/Libs.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Phantom.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/Phantom.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +26,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd634be12aae4bd59101de4187d8c03810560d0/7b/d6abb68e/ID3D11ClassInstance.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/51/24f2f7fc/MelonColorAttribute.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/7b/6f705650/NativeHook`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/47c7bb943926ab9fb9e6d9f53d4ca3af02d582b9dfa8cbef96b613cc91e/Logger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d6532402aa164045a857bb0de1acbe5c26530/_89a10/ConsoleColor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
@@ -31,6 +38,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="36x3Hm7m3VrWI9Z9L44yfLoTFIH" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -38,8 +48,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.GPG_PINENTRY_CONFIGURATION_PROPOSAL": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
@@ -48,7 +60,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "rider.code.cleanup.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -102,6 +114,7 @@
       <workItem from="1766078161166" duration="111000" />
       <workItem from="1766078294371" duration="507000" />
       <workItem from="1766078839816" duration="2883000" />
+      <workItem from="1766165773882" duration="336000" />
     </task>
     <servers />
   </component>

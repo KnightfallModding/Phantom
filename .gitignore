@@ -9,3 +9,6 @@
 *.fish
 
 Phantom/PhantomInfo.cs
+
+# Ignore temporary
+NobetaTrainer/
