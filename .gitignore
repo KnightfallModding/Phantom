@@ -7,3 +7,5 @@
 
 # Build scripts
 *.fish
+
+Phantom/PhantomInfo.cs
