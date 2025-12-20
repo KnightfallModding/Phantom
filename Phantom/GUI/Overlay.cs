@@ -5,9 +5,9 @@ namespace Phantom.GUI;
 
 public class Overlay
 {
-    private readonly float _delayMs;
-    private readonly int _fpsLimit;
     private readonly Stopwatch _stopwatch;
+    private float _delayMs;
+    private int _fpsLimit;
 
     public Overlay(int fpsLimit = 60)
     {
@@ -15,6 +15,17 @@ public class Overlay
         _delayMs = 1000f / fpsLimit;
         _stopwatch = new Stopwatch();
         _stopwatch.Start();
+    }
+
+    public int FPSLimit
+    {
+        get => _fpsLimit;
+        set
+        {
+            _fpsLimit = value;
+            _delayMs = 1000f / value;
+            _stopwatch.Restart();
+        }
     }
 
     private void ThrottleFps()
@@ -39,8 +50,8 @@ public class Overlay
 
     public void Render()
     {
-        ImGui.ShowDemoWindow();
-
         ThrottleFps();
+
+        ImGui.ShowDemoWindow();
     }
 }

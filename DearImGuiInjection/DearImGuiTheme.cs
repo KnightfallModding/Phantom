@@ -97,12 +97,11 @@ public static class DearImGuiTheme
         colors[(int)ImGuiCol.ModalWindowDimBg] = new Vector4(0.80f, 0.80f, 0.80f, 0.35f);
     }
 
-    private static void SetupCustomFont()
+    private static unsafe void SetupCustomFont()
     {
         var config = ImGui.ImFontConfig();
         config.MergeMode = false;
         ImGui.GetIO().Fonts.AddFontDefault();
         config.MergeMode = true;
-        ImGui.GetIO().Fonts.Build();
     }
 }

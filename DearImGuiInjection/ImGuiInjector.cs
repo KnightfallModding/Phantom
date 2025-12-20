@@ -100,13 +100,14 @@ public static class ImGuiInjector
     {
         switch (rendererKind)
         {
-            case RendererKind.None:
-                break;
             case RendererKind.D3D11:
                 InitImGuiDX11();
                 break;
             case RendererKind.D3D12:
                 InitImGuiDX12();
+                break;
+            case RendererKind.None:
+            default:
                 break;
         }
     }

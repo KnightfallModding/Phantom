@@ -26,20 +26,15 @@
 
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.7" />
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" />
+    <PackageReference Include="Hexa.NET.ImGui.Backends" Version="1.0.18" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="netstandard2.0.SharpDX" Version="4.2.1-beta0-g7abb72df54" />
-    <PackageReference Include="netstandard2.0.SharpDX.DXGI" Version="4.2.1-beta0-g7abb72df54" />
-    <PackageReference
-      Include="netstandard2.0.SharpDX.Direct3D11"
-      Version="4.2.1-beta0-g7abb72df54"
-    />
-    <PackageReference
-      Include="netstandard2.0.SharpDX.Direct3D12"
-      Version="4.2.1-beta0-g7abb72df54"
-    />
+    <PackageReference Include="Silk.NET.Core" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.DXGI" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.Direct3D11" Version="2.22.0" />
+    <PackageReference Include="Silk.NET.Direct3D12" Version="2.22.0" />
   </ItemGroup>
 
   <ItemGroup>

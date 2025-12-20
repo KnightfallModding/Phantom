@@ -3,10 +3,9 @@ using System.Runtime.InteropServices;
 using DearImGuiInjection.RendererFinder.Renderers;
 using DearImGuiInjection.Windows;
 using Hexa.NET.ImGui;
-using SharpDX.Direct3D12;
-using SharpDX.DXGI;
-using Device = SharpDX.Direct3D12.Device;
-using Resource = SharpDX.Direct3D12.Resource;
+using Silk.NET.Core.Native;
+using Silk.NET.Direct3D12;
+using Silk.NET.DXGI;
 
 namespace DearImGuiInjection.Backends;
 
@@ -16,9 +15,9 @@ internal static class ImGuiDX12
     private static IntPtr _windowHandle;
 
     private static FrameContext[] _frameContexts;
-    private static GraphicsCommandList _commandList;
-    private static DescriptorHeap _shaderDescriptorHeap;
-    private static CommandQueue _commandQueue;
+    private static ComPtr<ID3D12GraphicsCommandList> _commandList;
+    private static ComPtr<ID3D12DescriptorHeap> _shaderDescriptorHeap;
+    private static ComPtr<ID3D12CommandQueue> _commandQueue;
 
     private static User32.WndProcDelegate _myWindowProc;
     private static IntPtr _originalWindowProc;
@@ -60,26 +59,34 @@ internal static class ImGuiDX12
         _windowHandle = IntPtr.Zero;
     }
 
-    private static bool RetrieveCommandQueue(CommandQueue commandQueue, uint arg2, IntPtr ptr)
+    private static bool RetrieveCommandQueue(
+        ComPtr<ID3D12CommandQueue> commandQueue,
+        uint arg2,
+        IntPtr ptr
+    )
     {
-        if (commandQueue.Description.Type == CommandListType.Direct)
+        var desc = commandQueue.Get().GetDesc();
+
+        if (desc.Type != CommandListType.Direct)
         {
-            Log.Info("Retrieved the command queue.");
-            _commandQueue = commandQueue;
-            return true;
+            return false;
         }
 
-        return false;
+        Log.Info("Retrieved the command queue.");
+        _commandQueue = commandQueue;
+        return true;
     }
 
-    private static void InitImGui(
-        SwapChain1 swapChain,
+    private static unsafe void InitImGui(
+        ComPtr<IDXGISwapChain3> swapChain,
         uint syncInterval,
         uint flags,
         IntPtr presentParameters
     )
     {
-        var windowHandle = swapChain.Description.OutputHandle;
+        SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!ImGuiInjector.Initialized)
         {
@@ -118,78 +125,136 @@ internal static class ImGuiDX12
         }
     }
 
-    private static unsafe void InitImGuiDX12(SwapChain swapChain)
+    private static unsafe void InitImGuiDX12(ComPtr<IDXGISwapChain3> swapChain)
     {
-        using var device = InitImGuiDX12Internal(swapChain, out var bufferCount);
+        var device = InitImGuiDX12Internal(
+            swapChain,
+            out var bufferCount,
+            out var cpuHandle,
+            out var gpuHandle
+        );
 
         ImGuiDX12Impl.Init(
-            (void*)device.NativePointer,
+            device.Handle,
             bufferCount,
-            Format.R8G8B8A8_UNorm,
-            (void*)_shaderDescriptorHeap.NativePointer,
-            _shaderDescriptorHeap.CPUDescriptorHandleForHeapStart,
-            _shaderDescriptorHeap.GPUDescriptorHandleForHeapStart
+            Format.FormatR8G8B8A8Unorm,
+            _shaderDescriptorHeap.Handle,
+            &cpuHandle,
+            &gpuHandle
         );
 
         Log.Info("InitImGuiDX12 Finished.");
     }
 
-    private static Device InitImGuiDX12Internal(SwapChain swapChain, out int bufferCount)
+    private static unsafe ComPtr<ID3D12Device> InitImGuiDX12Internal(
+        ComPtr<IDXGISwapChain3> swapChain,
+        out uint bufferCount,
+        out CpuDescriptorHandle cpuHandle,
+        out GpuDescriptorHandle gpuHandle
+    )
     {
-        var device = swapChain.GetDevice<Device>();
-        var swapChainDescription = swapChain.Description;
+        ComPtr<ID3D12Device> device = default;
+        var deviceGuid = ID3D12Device.Guid;
+        swapChain.Get().GetDevice(&deviceGuid, (void**)&device);
+
+        SwapChainDesc swapChainDescription;
+        swapChain.Get().GetDesc(&swapChainDescription);
 
         bufferCount = swapChainDescription.BufferCount;
-        _shaderDescriptorHeap = device.CreateDescriptorHeap(
-            new DescriptorHeapDescription
+
+        DescriptorHeapDesc heapDesc = new()
+        {
+            Type = DescriptorHeapType.CbvSrvUav,
+            NumDescriptors = bufferCount,
+            Flags = DescriptorHeapFlags.ShaderVisible,
+        };
+        fixed (Guid* guid = &ID3D12DescriptorHeap.Guid)
+        {
+            fixed (ComPtr<ID3D12DescriptorHeap>* shaderDescriptorHeap = &_shaderDescriptorHeap)
             {
-                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView,
-                DescriptorCount = bufferCount,
-                Flags = DescriptorHeapFlags.ShaderVisible,
+                device.Get().CreateDescriptorHeap(&heapDesc, guid, (void**)shaderDescriptorHeap);
             }
-        );
+        }
 
         _frameContexts = new FrameContext[bufferCount];
         for (var i = 0; i < bufferCount; i++)
         {
-            _frameContexts[i] = new FrameContext
+            _frameContexts[i] = new FrameContext();
+            fixed (Guid* guid = &ID3D12CommandAllocator.Guid)
             {
-                CommandAllocator = device.CreateCommandAllocator(CommandListType.Direct),
-            };
+                fixed (
+                    ComPtr<ID3D12CommandAllocator>* commandAllocator = &_frameContexts[
+                        i
+                    ].CommandAllocator
+                )
+                {
+                    device
+                        .Get()
+                        .CreateCommandAllocator(
+                            CommandListType.Direct,
+                            guid,
+                            (void**)commandAllocator
+                        );
+                }
+            }
         }
 
-        _commandList = device.CreateCommandList(
-            CommandListType.Direct,
-            _frameContexts[0].CommandAllocator,
-            null
-        );
-        _commandList.Close();
-
-        var descriptorBackBuffer = device.CreateDescriptorHeap(
-            new DescriptorHeapDescription
+        fixed (Guid* guid = &ID3D12GraphicsCommandList.Guid)
+        {
+            fixed (ComPtr<ID3D12GraphicsCommandList>* commandList = &_commandList)
             {
-                Type = DescriptorHeapType.RenderTargetView,
-                DescriptorCount = bufferCount,
-                Flags = DescriptorHeapFlags.None,
-                NodeMask = 1,
+                device
+                    .Get()
+                    .CreateCommandList(
+                        0,
+                        CommandListType.Direct,
+                        _frameContexts[0].CommandAllocator.Handle,
+                        null,
+                        guid,
+                        (void**)&commandList
+                    );
             }
-        );
+        }
 
-        var rtvDescriptorSize = device.GetDescriptorHandleIncrementSize(
-            DescriptorHeapType.RenderTargetView
-        );
-        var rtvHandle = descriptorBackBuffer.CPUDescriptorHandleForHeapStart;
+        _commandList.Get().Close();
+
+        ComPtr<ID3D12DescriptorHeap> descriptorBackBuffer = default;
+        DescriptorHeapDesc rtvHeapDesc = new()
+        {
+            Type = DescriptorHeapType.Rtv,
+            NumDescriptors = bufferCount,
+            Flags = DescriptorHeapFlags.None,
+            NodeMask = 1,
+        };
+        fixed (Guid* guid = &ID3D12DescriptorHeap.Guid)
+        {
+            device.Get().CreateDescriptorHeap(&rtvHeapDesc, guid, (void**)&descriptorBackBuffer);
+        }
+
+        var rtvDescriptorSize = device
+            .Get()
+            .GetDescriptorHandleIncrementSize(DescriptorHeapType.Rtv);
+        var rtvHandle = descriptorBackBuffer.Get().GetCPUDescriptorHandleForHeapStart();
 
         for (var i = 0; i < bufferCount; i++)
         {
-            var backBuffer = swapChain.GetBackBuffer<Resource>(i);
+            ComPtr<ID3D12Resource> backBuffer = default;
+            fixed (Guid* guid = &ID3D12Resource.Guid)
+            {
+                swapChain.Get().GetBuffer((uint)i, guid, (void**)&backBuffer);
+            }
 
-            _frameContexts[i].MainRenderTargetDescriptor = rtvHandle;
-            _frameContexts[i].MainRenderTargetResource = backBuffer;
+            _frameContexts[i].RenderTargetCpuDescriptors = rtvHandle;
+            _frameContexts[i].RenderTarget = backBuffer;
 
-            device.CreateRenderTargetView(backBuffer, null, rtvHandle);
+            device.Get().CreateRenderTargetView(backBuffer.Handle, null, rtvHandle);
             rtvHandle.Ptr += rtvDescriptorSize;
         }
+
+        cpuHandle = descriptorBackBuffer.Get().GetCPUDescriptorHandleForHeapStart();
+        gpuHandle = _shaderDescriptorHeap.Get().GetGPUDescriptorHandleForHeapStart();
+
+        descriptorBackBuffer.Dispose();
 
         return device;
     }
@@ -212,19 +277,21 @@ internal static class ImGuiDX12
         return User32.CallWindowProc(_originalWindowProc, windowHandle, message, wParam, lParam);
     }
 
-    private static void RenderImGui(
-        SwapChain3 swapChain,
+    private static unsafe void RenderImGui(
+        ComPtr<IDXGISwapChain3> swapChain,
         uint syncInterval,
         uint flags,
         IntPtr presentParameters
     )
     {
-        if (_commandQueue == null)
+        if (_commandQueue.Handle == null)
         {
             return;
         }
 
-        var windowHandle = swapChain.Description.OutputHandle;
+        SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!IsTargetWindowHandle(windowHandle))
         {
@@ -232,8 +299,9 @@ internal static class ImGuiDX12
             return;
         }
 
-        var currentFrameContext = _frameContexts[swapChain.CurrentBackBufferIndex];
-        if (currentFrameContext.MainRenderTargetResource == null)
+        var currentBackBufferIndex = swapChain.Get().GetCurrentBackBufferIndex();
+        var currentFrameContext = _frameContexts[currentBackBufferIndex];
+        if (currentFrameContext.RenderTarget.Handle == null)
         {
             return;
         }
@@ -242,40 +310,43 @@ internal static class ImGuiDX12
 
         NewFrame();
 
-        currentFrameContext.CommandAllocator.Reset();
+        currentFrameContext.CommandAllocator.Get().Reset();
 
-        const int D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES = unchecked((int)0xffffffff);
-        var barrier = new ResourceBarrier
+        const uint D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES = 0xffffffff;
+        ResourceBarrier barrier = new()
         {
             Type = ResourceBarrierType.Transition,
             Flags = ResourceBarrierFlags.None,
-            Transition = new ResourceTransitionBarrier(
-                currentFrameContext.MainRenderTargetResource,
-                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
-                ResourceStates.Present,
-                ResourceStates.RenderTarget
-            ),
         };
+        barrier.Anonymous.Transition.PResource = currentFrameContext.RenderTarget.Handle;
+        barrier.Anonymous.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        barrier.Anonymous.Transition.StateBefore = (uint)ResourceStates.Present;
+        barrier.Anonymous.Transition.StateAfter = ResourceStates.RenderTarget;
 
-        _commandList.Reset(currentFrameContext.CommandAllocator, null);
-        _commandList.ResourceBarrier(barrier);
-        _commandList.SetRenderTargets(currentFrameContext.MainRenderTargetDescriptor, null);
-        _commandList.SetDescriptorHeaps(_shaderDescriptorHeap);
+        fixed (
+            CpuDescriptorHandle* cpuDescriptorHandle =
+                &currentFrameContext.RenderTargetCpuDescriptors
+        )
+        {
+            _commandList.Get().Reset(currentFrameContext.CommandAllocator.Handle, null);
+            _commandList.Get().ResourceBarrier(1, &barrier);
+            _commandList.Get().OMSetRenderTargets(1, cpuDescriptorHandle, 0, null);
+        }
+
+        var heaps = _shaderDescriptorHeap.Handle;
+        _commandList.Get().SetDescriptorHeaps(1, &heaps);
 
         var drawData = ImGui.GetDrawData();
         ImGuiDX12Impl.RenderDrawData(drawData, _commandList);
 
-        barrier.Transition = new ResourceTransitionBarrier(
-            currentFrameContext.MainRenderTargetResource,
-            D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES,
-            ResourceStates.RenderTarget,
-            ResourceStates.Present
-        );
+        barrier.Anonymous.Transition.StateBefore = ResourceStates.RenderTarget;
+        barrier.Anonymous.Transition.StateAfter = (uint)ResourceStates.Present;
 
-        _commandList.ResourceBarrier(barrier);
-        _commandList.Close();
+        _commandList.Get().ResourceBarrier(1, &barrier);
+        _commandList.Get().Close();
 
-        _commandQueue.ExecuteCommandList(_commandList);
+        var cmdList = (ID3D12CommandList*)_commandList.Handle;
+        _commandQueue.Get().ExecuteCommandLists(1, &cmdList);
     }
 
     private static bool IsTargetWindowHandle(IntPtr windowHandle)
@@ -319,8 +390,8 @@ internal static class ImGuiDX12
         }*/
     }
 
-    private static void PreResizeBuffers(
-        SwapChain3 swapChain,
+    private static unsafe void PreResizeBuffers(
+        ComPtr<IDXGISwapChain3> swapChain,
         int bufferCount,
         int width,
         int height,
@@ -333,7 +404,9 @@ internal static class ImGuiDX12
             return;
         }
 
-        var windowHandle = swapChain.Description.OutputHandle;
+        SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!IsTargetWindowHandle(windowHandle))
         {
@@ -345,13 +418,13 @@ internal static class ImGuiDX12
 
         foreach (var frameContext in _frameContexts)
         {
-            frameContext.MainRenderTargetResource?.Dispose();
-            frameContext.MainRenderTargetResource = null;
+            frameContext.RenderTarget.Dispose();
+            frameContext.RenderTarget = default;
         }
     }
 
-    private static void PostResizeBuffers(
-        SwapChain3 swapChain,
+    private static unsafe void PostResizeBuffers(
+        ComPtr<IDXGISwapChain3> swapChain,
         int bufferCount,
         int width,
         int height,
@@ -359,7 +432,9 @@ internal static class ImGuiDX12
         int swapchainFlags
     )
     {
-        var windowHandle = swapChain.Description.OutputHandle;
+        SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!IsTargetWindowHandle(windowHandle))
         {
@@ -369,23 +444,35 @@ internal static class ImGuiDX12
             return;
         }
 
-        var device = swapChain.GetDevice<Device>();
-        for (var i = 0; i < swapChain.Description.BufferCount; i++)
+        ComPtr<ID3D12Device> device = default;
+        var deviceGuid = ID3D12Device.Guid;
+        swapChain.Get().GetDevice(&deviceGuid, (void**)&device);
+
+        for (var i = 0; i < desc.BufferCount; i++)
         {
-            var backBuffer = swapChain.GetBackBuffer<Resource>(i);
-            device.CreateRenderTargetView(
-                backBuffer,
-                null,
-                _frameContexts[i].MainRenderTargetDescriptor
-            );
-            _frameContexts[i].MainRenderTargetResource = backBuffer;
+            ComPtr<ID3D12Resource> backBuffer = default;
+            fixed (Guid* guid = &ID3D12Resource.Guid)
+            {
+                swapChain.Get().GetBuffer((uint)i, guid, (void**)&backBuffer);
+            }
+
+            device
+                .Get()
+                .CreateRenderTargetView(
+                    backBuffer.Handle,
+                    null,
+                    _frameContexts[i].RenderTargetCpuDescriptors
+                );
+            _frameContexts[i].RenderTarget = backBuffer;
         }
+
+        device.Dispose();
     }
 
-    internal class FrameContext
+    private class FrameContext
     {
-        internal CommandAllocator CommandAllocator;
-        internal CpuDescriptorHandle MainRenderTargetDescriptor;
-        internal Resource MainRenderTargetResource;
+        public ComPtr<ID3D12CommandAllocator> CommandAllocator;
+        public ComPtr<ID3D12Resource> RenderTarget;
+        public CpuDescriptorHandle RenderTargetCpuDescriptors;
     }
 }

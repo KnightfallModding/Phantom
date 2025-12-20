@@ -1,17 +1,17 @@
 ﻿using System;
 using BepInEx.Unity.IL2CPP.Hook;
 using DearImGuiInjection.CppInterop;
+using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Device = SharpDX.Direct3D11.Device;
+using Silk.NET.Core.Native;
+using SilkD3D11 = Silk.NET.Direct3D11;
+using SilkDXGI = Silk.NET.DXGI;
 
 namespace DearImGuiInjection.RendererFinder.Renderers;
 
 /// <summary>
-/// Contains a full list of IDXGISwapChain functions to be used
-/// as an indexer into the SwapChain Virtual Function Table entries.
+///     Contains a full list of IDXGISwapChain functions to be used
+///     as an indexer into the SwapChain Virtual Function Table entries.
 /// </summary>
 public enum IDXGISwapChain
 {
@@ -44,59 +44,94 @@ public enum IDXGISwapChain
 
 public class DX11Renderer : IRenderer
 {
-    public static void AttachThread()
-    {
-        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-    }
+    private static readonly CDXGISwapChainPresentDelegate _swapChainPresentHookDelegate =
+        SwapChainPresentHook;
 
-    // SwapChainPresent hook
-    private delegate IntPtr CDXGISwapChainPresentDelegate(IntPtr self, uint syncInterval, uint flags);
-
-    private static readonly CDXGISwapChainPresentDelegate _swapChainPresentHookDelegate = new(SwapChainPresentHook);
     private static CDXGISwapChainPresentDelegate _swapChainPresentHookOriginal;
     private static INativeDetour _swapChainPresentHook;
+    private static Action<ComPtr<SilkDXGI.IDXGISwapChain>, uint, uint> _onPresentAction;
 
-    public static event Action<SwapChain, uint, uint> OnPresent { add { _onPresentAction += value; } remove { _onPresentAction -= value; } }
-    private static Action<SwapChain, uint, uint> _onPresentAction;
+    private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookDelegate =
+        SwapChainResizeBuffersHook;
 
-    // SwapChainResizeBuffer hook
-    private delegate IntPtr CDXGISwapChainResizeBuffersDelegate(IntPtr self, uint bufferCount, uint width, uint height, Format newFormat, uint swapchainFlags);
-
-    private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookDelegate = new(SwapChainResizeBuffersHook);
     private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookOriginal;
     private static INativeDetour _swapChainResizeBuffersHook;
 
-    public static event Action<SwapChain, uint, uint, uint, Format, uint> PreResizeBuffers { add { _preResizeBuffers += value; } remove { _preResizeBuffers -= value; } }
-    private static Action<SwapChain, uint, uint, uint, Format, uint> _preResizeBuffers;
+    private static Action<
+        ComPtr<SilkDXGI.IDXGISwapChain>,
+        uint,
+        uint,
+        uint,
+        SilkDXGI.Format,
+        uint
+    > _preResizeBuffers;
 
-    public static event Action<SwapChain, uint, uint, uint, Format, uint> PostResizeBuffers { add { _postResizeBuffers += value; } remove { _postResizeBuffers -= value; } }
-    private static Action<SwapChain, uint, uint, uint, Format, uint> _postResizeBuffers;
+    private static Action<
+        ComPtr<SilkDXGI.IDXGISwapChain>,
+        uint,
+        uint,
+        uint,
+        SilkDXGI.Format,
+        uint
+    > _postResizeBuffers;
 
-    public bool Init()
+    public unsafe bool Init()
     {
         Log.Info("DX11Renderer.Init()");
 
-        var windowHandle = Windows.User32.CreateFakeWindow();
+        var windowHandle = User32.CreateFakeWindow();
 
-        var desc = new SwapChainDescription()
+        var dxgiFactory = SilkDXGI.DXGI.GetApi(null);
+        var d3d11 = SilkD3D11.D3D11.GetApi(null);
+
+        SilkDXGI.SwapChainDesc desc = new()
         {
+            BufferDesc = new SilkDXGI.ModeDesc
+            {
+                Width = 500,
+                Height = 300,
+                RefreshRate = new SilkDXGI.Rational { Numerator = 60, Denominator = 1 },
+                Format = SilkDXGI.Format.FormatR8G8B8A8Unorm,
+            },
+            SampleDesc = new SilkDXGI.SampleDesc { Count = 1, Quality = 0 },
+            BufferUsage = SilkDXGI.DXGI.UsageRenderTargetOutput,
             BufferCount = 1,
-            ModeDescription = new ModeDescription(500, 300, new Rational(60, 1), Format.R8G8B8A8_UNorm),
-            IsWindowed = true,
-            OutputHandle = windowHandle,
-            SampleDescription = new SampleDescription(1, 0),
-            Usage = Usage.RenderTargetOutput
+            OutputWindow = windowHandle,
+            Windowed = 1,
         };
 
-        Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, desc, out var device, out var swapChain);
-        var swapChainVTable = VirtualFunctionTable.FromObject((nuint)(nint)swapChain.NativePointer, (nuint)Enum.GetNames(typeof(IDXGISwapChain)).Length);
-        var swapChainPresentFunctionPtr = swapChainVTable.TableEntries[(int)IDXGISwapChain.Present].FunctionPointer;
-        var swapChainResizeBuffersFunctionPtr = swapChainVTable.TableEntries[(int)IDXGISwapChain.ResizeBuffers].FunctionPointer;
+        ComPtr<SilkD3D11.ID3D11Device> device = default;
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain = default;
+        d3d11.CreateDeviceAndSwapChain(
+            null,
+            D3DDriverType.Hardware,
+            0,
+            0,
+            null,
+            0,
+            SilkD3D11.D3D11.SdkVersion,
+            &desc,
+            swapChain.GetAddressOf(),
+            device.GetAddressOf(),
+            null,
+            null
+        );
+
+        var swapChainVTable = VirtualFunctionTable.FromObject(
+            (nuint)(nint)swapChain.Handle,
+            (nuint)Enum.GetNames(typeof(IDXGISwapChain)).Length
+        );
+        var swapChainPresentFunctionPtr = swapChainVTable
+            .TableEntries[(int)IDXGISwapChain.Present]
+            .FunctionPointer;
+        var swapChainResizeBuffersFunctionPtr = swapChainVTable
+            .TableEntries[(int)IDXGISwapChain.ResizeBuffers]
+            .FunctionPointer;
 
         swapChain.Dispose();
         device.Dispose();
 
-        Windows.User32.DestroyWindow(windowHandle);
+        User32.DestroyWindow(windowHandle);
 
         _swapChainPresentHook = INativeDetour.CreateAndApply(
             (nint)swapChainPresentFunctionPtr,
@@ -126,15 +161,58 @@ public class DX11Renderer : IRenderer
         _onPresentAction = null;
     }
 
-    private static IntPtr SwapChainPresentHook(IntPtr self, uint syncInterval, uint flags)
+    public static void AttachThread()
+    {
+        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
+    }
+
+    public static event Action<ComPtr<SilkDXGI.IDXGISwapChain>, uint, uint> OnPresent
+    {
+        add => _onPresentAction += value;
+        remove => _onPresentAction -= value;
+    }
+
+    public static event Action<
+        ComPtr<SilkDXGI.IDXGISwapChain>,
+        uint,
+        uint,
+        uint,
+        SilkDXGI.Format,
+        uint
+    > PreResizeBuffers
+    {
+        add => _preResizeBuffers += value;
+        remove => _preResizeBuffers -= value;
+    }
+
+    public static event Action<
+        ComPtr<SilkDXGI.IDXGISwapChain>,
+        uint,
+        uint,
+        uint,
+        SilkDXGI.Format,
+        uint
+    > PostResizeBuffers
+    {
+        add => _postResizeBuffers += value;
+        remove => _postResizeBuffers -= value;
+    }
+
+    private static unsafe IntPtr SwapChainPresentHook(IntPtr self, uint syncInterval, uint flags)
     {
         AttachThread();
 
-        var swapChain = new SwapChain(self);
+        var swapChain = new ComPtr<SilkDXGI.IDXGISwapChain>((SilkDXGI.IDXGISwapChain*)self);
 
         if (_onPresentAction != null)
         {
-            foreach (Action<SwapChain, uint, uint> item in _onPresentAction.GetInvocationList())
+            foreach (
+                Action<
+                    ComPtr<SilkDXGI.IDXGISwapChain>,
+                    uint,
+                    uint
+                > item in _onPresentAction.GetInvocationList()
+            )
             {
                 try
                 {
@@ -150,15 +228,31 @@ public class DX11Renderer : IRenderer
         return _swapChainPresentHookOriginal(self, syncInterval, flags);
     }
 
-    private static IntPtr SwapChainResizeBuffersHook(IntPtr swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, uint swapchainFlags)
+    private static unsafe IntPtr SwapChainResizeBuffersHook(
+        IntPtr swapchainPtr,
+        uint bufferCount,
+        uint width,
+        uint height,
+        SilkDXGI.Format newFormat,
+        uint swapchainFlags
+    )
     {
         AttachThread();
 
-        var swapChain = new SwapChain(swapchainPtr);
+        var swapChain = new ComPtr<SilkDXGI.IDXGISwapChain>((SilkDXGI.IDXGISwapChain*)swapchainPtr);
 
         if (_preResizeBuffers != null)
         {
-            foreach (Action<SwapChain, uint, uint, uint, Format, uint> item in _preResizeBuffers.GetInvocationList())
+            foreach (
+                Action<
+                    ComPtr<SilkDXGI.IDXGISwapChain>,
+                    uint,
+                    uint,
+                    uint,
+                    SilkDXGI.Format,
+                    uint
+                > item in _preResizeBuffers.GetInvocationList()
+            )
             {
                 try
                 {
@@ -171,11 +265,27 @@ public class DX11Renderer : IRenderer
             }
         }
 
-        var result = _swapChainResizeBuffersHookOriginal(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
+        var result = _swapChainResizeBuffersHookOriginal(
+            swapchainPtr,
+            bufferCount,
+            width,
+            height,
+            newFormat,
+            swapchainFlags
+        );
 
         if (_postResizeBuffers != null)
         {
-            foreach (Action<SwapChain, uint, uint, uint, Format, uint> item in _postResizeBuffers.GetInvocationList())
+            foreach (
+                Action<
+                    ComPtr<SilkDXGI.IDXGISwapChain>,
+                    uint,
+                    uint,
+                    uint,
+                    SilkDXGI.Format,
+                    uint
+                > item in _postResizeBuffers.GetInvocationList()
+            )
             {
                 try
                 {
@@ -190,4 +300,21 @@ public class DX11Renderer : IRenderer
 
         return result;
     }
+
+    // SwapChainPresent hook
+    private delegate IntPtr CDXGISwapChainPresentDelegate(
+        IntPtr self,
+        uint syncInterval,
+        uint flags
+    );
+
+    // SwapChainResizeBuffer hook
+    private delegate IntPtr CDXGISwapChainResizeBuffersDelegate(
+        IntPtr self,
+        uint bufferCount,
+        uint width,
+        uint height,
+        SilkDXGI.Format newFormat,
+        uint swapchainFlags
+    );
 }

@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 using DearImGuiInjection.RendererFinder.Renderers;
 using DearImGuiInjection.Windows;
 using Hexa.NET.ImGui;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Device = SharpDX.Direct3D11.Device;
+using Silk.NET.Core.Native;
+using SilkD3D11 = Silk.NET.Direct3D11;
+using SilkDXGI = Silk.NET.DXGI;
 
 namespace DearImGuiInjection.Backends;
 
@@ -14,9 +14,11 @@ internal static class ImGuiDX11
     private const int GWL_WNDPROC = -4;
     private static IntPtr _windowHandle;
 
-    private static RenderTargetView _renderTargetView;
+    private static ComPtr<SilkD3D11.ID3D11RenderTargetView> _renderTargetView;
     private static User32.WndProcDelegate _myWindowProc;
     private static IntPtr _originalWindowProc;
+
+    private static ComPtr<SilkD3D11.ID3D11DeviceContext> _deviceContext;
 
     internal static void Init()
     {
@@ -41,7 +43,8 @@ internal static class ImGuiDX11
 
         ImGuiWin32Impl.Shutdown();
 
-        _renderTargetView = null;
+        _renderTargetView.Dispose();
+        _renderTargetView = default;
 
         Log.Info("ImGui.ImGuiImplDX11Shutdown()");
         ImGuiDX11Impl.Shutdown();
@@ -49,9 +52,15 @@ internal static class ImGuiDX11
         _windowHandle = IntPtr.Zero;
     }
 
-    private static void InitImGui(SwapChain swapChain, uint syncInterval, uint flags)
+    private static unsafe void InitImGui(
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain,
+        uint syncInterval,
+        uint flags
+    )
     {
-        var windowHandle = swapChain.Description.OutputHandle;
+        SilkDXGI.SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!ImGuiInjector.Initialized)
         {
@@ -89,21 +98,37 @@ internal static class ImGuiDX11
         );
     }
 
-    private static unsafe void InitImGuiDX11(SwapChain swapChain)
+    private static unsafe void InitImGuiDX11(ComPtr<SilkDXGI.IDXGISwapChain> swapChain)
     {
-        using var device = InitImGuiDX11Internal(swapChain);
+        var device = InitImGuiDX11Internal(swapChain);
 
-        ImGuiDX11Impl.Init(
-            (void*)device.NativePointer,
-            (void*)device.ImmediateContext.NativePointer
-        );
+        ImGuiDX11Impl.Init(device.Handle, _deviceContext.Handle);
     }
 
-    private static Device InitImGuiDX11Internal(SwapChain swapChain)
+    private static unsafe ComPtr<SilkD3D11.ID3D11Device> InitImGuiDX11Internal(
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain
+    )
     {
-        var device = swapChain.GetDevice<Device>();
-        using var backBuffer = swapChain.GetBackBuffer<Texture2D>(0);
-        _renderTargetView = new RenderTargetView(device, backBuffer);
+        ComPtr<SilkD3D11.ID3D11Device> device = default;
+        var deviceGuid = SilkD3D11.ID3D11Device.Guid;
+        swapChain.Get().GetDevice(&deviceGuid, (void**)&device);
+
+        device.Get().GetImmediateContext(_deviceContext.GetAddressOf());
+
+        ComPtr<SilkD3D11.ID3D11Texture2D> backBuffer = default;
+        fixed (Guid* guid = &SilkD3D11.ID3D11Device.Guid)
+        {
+            swapChain.Get().GetBuffer(0, guid, (void**)&backBuffer);
+        }
+
+        device
+            .Get()
+            .CreateRenderTargetView(
+                (SilkD3D11.ID3D11Resource*)backBuffer.Handle,
+                null,
+                _renderTargetView.GetAddressOf()
+            );
+        backBuffer.Dispose();
 
         return device;
     }
@@ -126,9 +151,15 @@ internal static class ImGuiDX11
         return User32.CallWindowProc(_originalWindowProc, windowHandle, message, wParam, lParam);
     }
 
-    private static void RenderImGui(SwapChain swapChain, uint syncInterval, uint flags)
+    private static unsafe void RenderImGui(
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain,
+        uint syncInterval,
+        uint flags
+    )
     {
-        var windowHandle = swapChain.Description.OutputHandle;
+        SilkDXGI.SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!IsTargetWindowHandle(windowHandle))
         {
@@ -140,8 +171,7 @@ internal static class ImGuiDX11
 
         NewFrame();
 
-        using var device = swapChain.GetDevice<Device>();
-        device.ImmediateContext.OutputMerger.SetRenderTargets(_renderTargetView);
+        _deviceContext.Get().OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), null);
 
         var drawData = ImGui.GetDrawData();
         ImGuiDX11Impl.RenderDrawData(drawData);
@@ -187,12 +217,12 @@ internal static class ImGuiDX11
         }*/
     }
 
-    private static void PreResizeBuffers(
-        SwapChain swapChain,
+    private static unsafe void PreResizeBuffers(
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain,
         uint bufferCount,
         uint width,
         uint height,
-        Format newFormat,
+        SilkDXGI.Format newFormat,
         uint swapchainFlags
     )
     {
@@ -201,7 +231,9 @@ internal static class ImGuiDX11
             return;
         }
 
-        var windowHandle = swapChain.Description.OutputHandle;
+        SilkDXGI.SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         Log.Info($"[DX11 ResizeBuffers] Window Handle {windowHandle:X}");
 
@@ -213,17 +245,17 @@ internal static class ImGuiDX11
             return;
         }
 
-        _renderTargetView?.Dispose();
-        _renderTargetView = null;
+        _renderTargetView.Dispose();
+        _renderTargetView = default;
         ImGuiDX11Impl.InvalidateDeviceObjects();
     }
 
-    private static void PostResizeBuffers(
-        SwapChain swapChain,
+    private static unsafe void PostResizeBuffers(
+        ComPtr<SilkDXGI.IDXGISwapChain> swapChain,
         uint bufferCount,
         uint width,
         uint height,
-        Format newFormat,
+        SilkDXGI.Format newFormat,
         uint swapchainFlags
     )
     {
@@ -232,7 +264,9 @@ internal static class ImGuiDX11
             return;
         }
 
-        var windowHandle = swapChain.Description.OutputHandle;
+        SilkDXGI.SwapChainDesc desc;
+        swapChain.Get().GetDesc(&desc);
+        var windowHandle = desc.OutputWindow;
 
         if (!IsTargetWindowHandle(windowHandle))
         {
@@ -244,8 +278,24 @@ internal static class ImGuiDX11
 
         ImGuiDX11Impl.CreateDeviceObjects();
 
-        using var device = swapChain.GetDevice<Device>();
-        using var backBuffer = swapChain.GetBackBuffer<Texture2D>(0);
-        _renderTargetView = new RenderTargetView(device, backBuffer);
+        ComPtr<SilkD3D11.ID3D11Device> device = default;
+        var deviceGuid = SilkD3D11.ID3D11Device.Guid;
+        swapChain.Get().GetDevice(&deviceGuid, (void**)&device);
+
+        ComPtr<SilkD3D11.ID3D11Texture2D> backBuffer = default;
+        fixed (Guid* guid = &SilkD3D11.ID3D11Texture2D.Guid)
+        {
+            swapChain.Get().GetBuffer(0, guid, (void**)&backBuffer);
+        }
+
+        device
+            .Get()
+            .CreateRenderTargetView(
+                (SilkD3D11.ID3D11Resource*)backBuffer.Handle,
+                null,
+                _renderTargetView.GetAddressOf()
+            );
+        backBuffer.Dispose();
+        device.Dispose();
     }
 }

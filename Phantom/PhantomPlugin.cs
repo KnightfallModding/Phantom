@@ -9,15 +9,6 @@ using Il2CppInterop.Runtime.InteropTypes;
 using Phantom.GUI;
 using Phantom.MonoBehaviours;
 
-// [assembly: MelonGame("Landfall Games", "Knightfall")]
-// [assembly: MelonInfo(
-//     typeof(PhantomPlugin),
-//     PhantomInfo.Name,
-//     PhantomInfo.Version,
-//     PhantomInfo.Author
-// )]
-// [assembly: MelonColor(1, 255, 102, 99)]
-
 namespace Phantom;
 
 [BepInPlugin(PhantomInfo.Id, PhantomInfo.Name, PhantomInfo.Version)]

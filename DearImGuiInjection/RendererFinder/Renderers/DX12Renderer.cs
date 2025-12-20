@@ -2,107 +2,116 @@
 using System.Linq;
 using BepInEx.Unity.IL2CPP.Hook;
 using DearImGuiInjection.CppInterop;
+using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
-using SharpDX.Direct3D12;
-using SharpDX.DXGI;
+using Silk.NET.Core.Native;
+using Silk.NET.Direct3D12;
+using Silk.NET.DXGI;
 
 namespace DearImGuiInjection.RendererFinder.Renderers;
 
 public class DX12Renderer : IRenderer
 {
-    public static void AttachThread()
-    {
-        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-    }
+    private static readonly CDXGISwapChainPresent1Delegate _swapchainPresentHookDelegate =
+        SwapChainPresentHook;
 
-    private delegate IntPtr CDXGISwapChainPresent1Delegate(IntPtr self, uint syncInterval, uint presentFlags, IntPtr presentParametersRef);
-
-    private static readonly CDXGISwapChainPresent1Delegate _swapchainPresentHookDelegate = new(SwapChainPresentHook);
     private static CDXGISwapChainPresent1Delegate _swapchainPresentHookOriginal;
     private static INativeDetour _swapChainPresentHook;
+    private static Action<ComPtr<IDXGISwapChain3>, uint, uint, IntPtr> _onPresentAction;
 
-    public static event Action<SwapChain3, uint, uint, IntPtr> OnPresent { add => _onPresentAction += value; remove => _onPresentAction -= value; }
-    private static Action<SwapChain3, uint, uint, IntPtr> _onPresentAction;
+    private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBufferHookDelegate =
+        SwapChainResizeBuffersHook;
 
-    private delegate IntPtr CDXGISwapChainResizeBuffersDelegate(IntPtr self, int bufferCount, int width, int height, int newFormat, int swapchainFlags);
-
-    private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBufferHookDelegate = new(SwapChainResizeBuffersHook);
     private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBufferHookOriginal;
     private static INativeDetour _swapChainResizeBufferHook;
+    private static Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> _preResizeBuffers;
+    private static Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> _postResizeBuffers;
 
-    public static event Action<SwapChain3, int, int, int, int, int> PreResizeBuffers { add => _preResizeBuffers += value; remove => _preResizeBuffers -= value; }
-    private static Action<SwapChain3, int, int, int, int, int> _preResizeBuffers;
+    private static readonly CommandQueueExecuteCommandListDelegate _commandQueueExecuteCommandListHookDelegate =
+        CommandQueueExecuteCommandListHook;
 
-    public static event Action<SwapChain3, int, int, int, int, int> PostResizeBuffers { add => _postResizeBuffers += value; remove => _postResizeBuffers -= value; }
-    private static Action<SwapChain3, int, int, int, int, int> _postResizeBuffers;
-
-    private delegate void CommandQueueExecuteCommandListDelegate(IntPtr self, uint numCommandLists, IntPtr ppCommandLists);
-
-    private static readonly CommandQueueExecuteCommandListDelegate _commandQueueExecuteCommandListHookDelegate = new(CommandQueueExecuteCommandListHook);
     private static CommandQueueExecuteCommandListDelegate _commandQueueExecuteCommandListHookOriginal;
     private static INativeDetour _commandQueueExecuteCommandListHook;
-
-    public static event Func<CommandQueue, uint, IntPtr, bool> OnExecuteCommandList
-    {
-        add
-        {
-            lock (_onExecuteCommandListActionLock)
-            {
-                OnExecuteCommandListAction += value;
-            }
-        }
-        remove
-        {
-            lock (_onExecuteCommandListActionLock)
-            {
-                OnExecuteCommandListAction -= value;
-            }
-        }
-    }
     private static readonly object _onExecuteCommandListActionLock = new();
 
-    private static event Func<CommandQueue, uint, IntPtr, bool> OnExecuteCommandListAction;
-
-    public bool Init()
+    public unsafe bool Init()
     {
-        var windowHandle = Windows.User32.CreateFakeWindow();
+        var windowHandle = User32.CreateFakeWindow();
 
-        var desc = new SwapChainDescription()
+        var dxgi = DXGI.GetApi(null);
+        var d3d12 = D3D12.GetApi();
+
+        ComPtr<IDXGIFactory4> factory = default;
+        fixed (Guid* guid = &IDXGIFactory4.Guid)
+        {
+            dxgi.CreateDXGIFactory2(0, guid, (void**)&factory);
+        }
+
+        ComPtr<ID3D12Device> device = default;
+        fixed (Guid* guid = &ID3D12Device.Guid)
+        {
+            d3d12.CreateDevice(null, D3DFeatureLevel.Level110, guid, (void**)&device);
+        }
+
+        CommandQueueDesc queueDesc = new() { Type = CommandListType.Direct, Flags = 0 };
+
+        ComPtr<ID3D12CommandQueue> commandQueue = default;
+        fixed (Guid* guid = &ID3D12CommandQueue.Guid)
+        {
+            device.Get().CreateCommandQueue(&queueDesc, guid, (void**)&commandQueue);
+        }
+
+        SwapChainDesc desc = new()
         {
             BufferCount = 2,
-            ModeDescription = new ModeDescription(500, 300, new Rational(60, 1), Format.R8G8B8A8_UNorm),
-            Usage = Usage.RenderTargetOutput,
+            BufferDesc = new ModeDesc
+            {
+                Width = 500,
+                Height = 300,
+                RefreshRate = new Rational { Numerator = 60, Denominator = 1 },
+                Format = Format.FormatR8G8B8A8Unorm,
+            },
+            BufferUsage = DXGI.UsageRenderTargetOutput,
             SwapEffect = SwapEffect.FlipDiscard,
-            OutputHandle = windowHandle,
-            SampleDescription = new SampleDescription(1, 0),
-            IsWindowed = true
+            OutputWindow = windowHandle,
+            SampleDesc = new SampleDesc { Count = 1, Quality = 0 },
+            Windowed = 1,
         };
 
-        using var factory = new Factory4();
+        ComPtr<Silk.NET.DXGI.IDXGISwapChain> tempSwapChain = default;
+        factory
+            .Get()
+            .CreateSwapChain((IUnknown*)commandQueue.Handle, &desc, tempSwapChain.GetAddressOf());
 
-        var device = new SharpDX.Direct3D12.Device(null, SharpDX.Direct3D.FeatureLevel.Level_11_0);
-        CommandQueueDescription queueDesc = new CommandQueueDescription(CommandListType.Direct);
-        var commandQueue = device.CreateCommandQueue(queueDesc);
-        var tempSwapChain = new SwapChain(factory, commandQueue, desc);
-        var swapChain = tempSwapChain.QueryInterface<SwapChain3>();
+        ComPtr<IDXGISwapChain3> swapChain = default;
+        fixed (Guid* guid = &IDXGISwapChain3.Guid)
+        {
+            tempSwapChain.Get().QueryInterface(guid, (void**)&swapChain);
+        }
+
         tempSwapChain.Dispose();
 
         const int Present1MethodTableIndex = 22;
         const int ResizeBufferMethodTableIndex = 13;
-        // not accurate, probably, don't care. Just make sure to extend it if needed
         const int SwapChainFunctionCount = Present1MethodTableIndex + 1;
-        var swapChainVTable = VirtualFunctionTable.FromObject((nuint)(nint)swapChain.NativePointer, SwapChainFunctionCount);
+        var swapChainVTable = VirtualFunctionTable.FromObject(
+            (nuint)(nint)swapChain.Handle,
+            SwapChainFunctionCount
+        );
 
         const int ExecuteCommandListTableIndex = 10;
-        // not accurate, probably, don't care. Just make sure to extend it if needed
         const int CommandListFunctionCount = ExecuteCommandListTableIndex + 1;
-        var commandQueueVTable = VirtualFunctionTable.FromObject((nuint)(nint)commandQueue.NativePointer, CommandListFunctionCount);
+        var commandQueueVTable = VirtualFunctionTable.FromObject(
+            (nuint)(nint)commandQueue.Handle,
+            CommandListFunctionCount
+        );
 
         swapChain.Dispose();
         commandQueue.Dispose();
         device.Dispose();
+        factory.Dispose();
 
-        Windows.User32.DestroyWindow(windowHandle);
+        User32.DestroyWindow(windowHandle);
 
         _swapChainPresentHook = INativeDetour.CreateAndApply(
             (nint)swapChainVTable.TableEntries[Present1MethodTableIndex].FunctionPointer,
@@ -139,15 +148,72 @@ public class DX12Renderer : IRenderer
         _onPresentAction = null;
     }
 
-    private static IntPtr SwapChainPresentHook(IntPtr self, uint syncInterval, uint flags, IntPtr presentParameters)
+    public static void AttachThread()
+    {
+        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
+    }
+
+    public static event Action<ComPtr<IDXGISwapChain3>, uint, uint, IntPtr> OnPresent
+    {
+        add => _onPresentAction += value;
+        remove => _onPresentAction -= value;
+    }
+
+    public static event Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> PreResizeBuffers
+    {
+        add => _preResizeBuffers += value;
+        remove => _preResizeBuffers -= value;
+    }
+
+    public static event Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> PostResizeBuffers
+    {
+        add => _postResizeBuffers += value;
+        remove => _postResizeBuffers -= value;
+    }
+
+    public static event Func<ComPtr<ID3D12CommandQueue>, uint, IntPtr, bool> OnExecuteCommandList
+    {
+        add
+        {
+            lock (_onExecuteCommandListActionLock)
+            {
+                OnExecuteCommandListAction += value;
+            }
+        }
+        remove
+        {
+            lock (_onExecuteCommandListActionLock)
+            {
+                OnExecuteCommandListAction -= value;
+            }
+        }
+    }
+
+    private static event Func<
+        ComPtr<ID3D12CommandQueue>,
+        uint,
+        IntPtr,
+        bool
+    > OnExecuteCommandListAction;
+
+    private static unsafe IntPtr SwapChainPresentHook(
+        IntPtr self,
+        uint syncInterval,
+        uint flags,
+        IntPtr presentParameters
+    )
     {
         AttachThread();
 
-        var swapChain = new SwapChain3(self);
+        var swapChain = new ComPtr<IDXGISwapChain3>((IDXGISwapChain3*)self);
 
         if (_onPresentAction != null)
         {
-            foreach (Action<SwapChain3, uint, uint, IntPtr> item in _onPresentAction.GetInvocationList().Cast<Action<SwapChain3, uint, uint, IntPtr>>())
+            foreach (
+                var item in _onPresentAction
+                    .GetInvocationList()
+                    .Cast<Action<ComPtr<IDXGISwapChain3>, uint, uint, IntPtr>>()
+            )
             {
                 try
                 {
@@ -163,15 +229,26 @@ public class DX12Renderer : IRenderer
         return _swapchainPresentHookOriginal(self, syncInterval, flags, presentParameters);
     }
 
-    private static IntPtr SwapChainResizeBuffersHook(IntPtr swapchainPtr, int bufferCount, int width, int height, int newFormat, int swapchainFlags)
+    private static unsafe IntPtr SwapChainResizeBuffersHook(
+        IntPtr swapchainPtr,
+        int bufferCount,
+        int width,
+        int height,
+        int newFormat,
+        int swapchainFlags
+    )
     {
         AttachThread();
 
-        var swapChain = new SwapChain3(swapchainPtr);
+        var swapChain = new ComPtr<IDXGISwapChain3>((IDXGISwapChain3*)swapchainPtr);
 
         if (_preResizeBuffers != null)
         {
-            foreach (Action<SwapChain3, int, int, int, int, int> item in _preResizeBuffers.GetInvocationList().Cast<Action<SwapChain3, int, int, int, int, int>>())
+            foreach (
+                var item in _preResizeBuffers
+                    .GetInvocationList()
+                    .Cast<Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int>>()
+            )
             {
                 try
                 {
@@ -184,11 +261,22 @@ public class DX12Renderer : IRenderer
             }
         }
 
-        var result = _swapChainResizeBufferHookOriginal(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
+        var result = _swapChainResizeBufferHookOriginal(
+            swapchainPtr,
+            bufferCount,
+            width,
+            height,
+            newFormat,
+            swapchainFlags
+        );
 
         if (_postResizeBuffers != null)
         {
-            foreach (Action<SwapChain3, int, int, int, int, int> item in _postResizeBuffers.GetInvocationList().Cast<Action<SwapChain3, int, int, int, int, int>>())
+            foreach (
+                var item in _postResizeBuffers
+                    .GetInvocationList()
+                    .Cast<Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int>>()
+            )
             {
                 try
                 {
@@ -204,7 +292,11 @@ public class DX12Renderer : IRenderer
         return result;
     }
 
-    private static void CommandQueueExecuteCommandListHook(IntPtr self, uint numCommandLists, IntPtr ppCommandLists)
+    private static unsafe void CommandQueueExecuteCommandListHook(
+        IntPtr self,
+        uint numCommandLists,
+        IntPtr ppCommandLists
+    )
     {
         var executedThings = false;
 
@@ -212,9 +304,13 @@ public class DX12Renderer : IRenderer
         {
             if (OnExecuteCommandListAction != null)
             {
-                var commandQueue = new CommandQueue(self);
+                var commandQueue = new ComPtr<ID3D12CommandQueue>((ID3D12CommandQueue*)self);
 
-                foreach (Func<CommandQueue, uint, IntPtr, bool> item in OnExecuteCommandListAction.GetInvocationList().Cast<Func<CommandQueue, uint, IntPtr, bool>>())
+                foreach (
+                    var item in OnExecuteCommandListAction
+                        .GetInvocationList()
+                        .Cast<Func<ComPtr<ID3D12CommandQueue>, uint, IntPtr, bool>>()
+                )
                 {
                     try
                     {
@@ -240,4 +336,26 @@ public class DX12Renderer : IRenderer
             _commandQueueExecuteCommandListHook.Dispose();
         }
     }
+
+    private delegate IntPtr CDXGISwapChainPresent1Delegate(
+        IntPtr self,
+        uint syncInterval,
+        uint presentFlags,
+        IntPtr presentParametersRef
+    );
+
+    private delegate IntPtr CDXGISwapChainResizeBuffersDelegate(
+        IntPtr self,
+        int bufferCount,
+        int width,
+        int height,
+        int newFormat,
+        int swapchainFlags
+    );
+
+    private delegate void CommandQueueExecuteCommandListDelegate(
+        IntPtr self,
+        uint numCommandLists,
+        IntPtr ppCommandLists
+    );
 }
