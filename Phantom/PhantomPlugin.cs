@@ -26,6 +26,7 @@ public class PhantomPlugin : BasePlugin
     // ReSharper disable once NullableWarningSuppressionIsUsed
     public static ManualLogSource Logger { get; private set; } = null!;
 
+    // ReSharper disable once UnusedMethodReturnValue.Global
     public static new T AddComponent<T>()
         where T : Il2CppObjectBase
     {

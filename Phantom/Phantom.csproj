@@ -58,7 +58,16 @@
     <WriteLinesToFile
       File="PhantomInfo.cs"
       Overwrite="true"
-      Lines="namespace Phantom%3B&#xD;&#xA;public static class PhantomInfo&#xD;&#xA;{&#xD;&#xA;    public const string Id = &quot;$(AssemblyName)&quot;%3B&#xD;&#xA;    public const string Name = &quot;$(ProductName)&quot;%3B&#xD;&#xA;    public const string Description = &quot;$(ProductName) is a Knightfall mod that extends the abilities of the game past their limits&quot;%3B&#xD;&#xA;    public const string Version = &quot;$(Version)&quot;%3B&#xD;&#xA;    public const string Author = &quot;$(Author)&quot;%3B&#xD;&#xA;}"
+      Lines="namespace Phantom%3B
+      
+static class PhantomInfo
+{
+    public const string Id = &quot;$(AssemblyName)&quot;%3B
+    public const string Name = &quot;$(ProductName)&quot;%3B
+    public const string Description = &quot;$(ProductName) is a Knightfall mod that extends the abilities of the game past their limits&quot;%3B
+    public const string Version = &quot;$(Version)&quot;%3B
+    public const string Author = &quot;$(Author)&quot;%3B
+}"
     />
   </Target>
 
