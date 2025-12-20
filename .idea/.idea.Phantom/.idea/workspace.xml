@@ -9,14 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="082ae2ae-5ac7-42c1-84ec-68650a844fa1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjection.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjection.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiTheme.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiTheme.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Fonts/Comfortaa-Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Shaders/imgui-frag.hlsl.bytes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Shaders/imgui-vertex.hlsl.bytes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Phantom.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/Phantom.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,15 +27,16 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/BepInExLog.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/Core/IPlugin.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Overlay.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Catpuccin.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/ITheme.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Modern.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/MonoBehaviours/QuitHandler.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/PhantomPlugin.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a5b41b67c1024476b7ad5eb17bd3d95213800/65/5bc9d487/ImGuiImplD3D11.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c7ecaddae04f4313a4d32a3e9b570a065910/24/2b3b209b/Unsafe.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd634be12aae4bd59101de4187d8c03810560d0/7b/d6abb68e/ID3D11ClassInstance.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/51/24f2f7fc/MelonColorAttribute.cs" root0="FORCE_HIGHLIGHTING" />
@@ -80,7 +78,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "rider.code.cleanup.on.save": "true",
-    "settings.editor.selected.configurable": "editor.preferences.tabs",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -140,6 +138,7 @@
       <workItem from="1766185530967" duration="868000" />
       <workItem from="1766189000836" duration="4500000" />
       <workItem from="1766234115450" duration="1647000" />
+      <workItem from="1766238462839" duration="12047000" />
     </task>
     <servers />
   </component>

@@ -80,8 +80,11 @@ static class PhantomInfo
   </Target>
 
   <Target Name="BundleBuildArtifacts">
-    <Copy SourceFiles="@(RuntimeLibs)" DestinationFolder="$(OutputDir)/plugins/Libraries" />
-    <Move SourceFiles="$(OutputDir)/$(AssemblyName).dll" DestinationFolder="$(OutputDir)/plugins" />
+    <MakeDir Directories="$(OutputDir)/BepInEx/plugins/Libraries/" />
+    <Move
+      SourceFiles="$(OutputDir)/$(AssemblyName).dll"
+      DestinationFolder="$(OutputDir)/BepInEx/plugins"
+    />
     <ZipDirectory
       SourceDirectory="$(OutputDir)"
       DestinationFile="release/$(ProductName) v$(Version).zip"
