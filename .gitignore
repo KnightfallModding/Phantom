@@ -12,3 +12,6 @@ Phantom/PhantomInfo.cs
 
 # Ignore temporary
 NobetaTrainer/
+
+# Ignore runtime libs
+Libs/runtime/
