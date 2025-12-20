@@ -17,21 +17,30 @@ public class Overlay
         _stopwatch.Start();
     }
 
-    public void Render()
+    private void ThrottleFps()
     {
-        // Render first
-        ImGui.ShowDemoWindow();
-
-        // Calculate how long to wait
         var elapsedMs = _stopwatch.Elapsed.TotalMilliseconds;
-        var targetMs = _delayMs;
+        var remainingMs = _delayMs - elapsedMs;
 
-        // Spin-wait for precision (or use a hybrid approach)
-        while (_stopwatch.Elapsed.TotalMilliseconds < targetMs)
+        // Sleep for the bulk of the wait (minus a buffer for imprecision)
+        if (remainingMs > 2)
+        {
+            Thread.Sleep((int)(remainingMs - 2));
+        }
+
+        // Spin-wait for precise timing
+        while (_stopwatch.Elapsed.TotalMilliseconds < _delayMs)
         {
             Thread.SpinWait(1);
         }
 
         _stopwatch.Restart();
+    }
+
+    public void Render()
+    {
+        ImGui.ShowDemoWindow();
+
+        ThrottleFps();
     }
 }

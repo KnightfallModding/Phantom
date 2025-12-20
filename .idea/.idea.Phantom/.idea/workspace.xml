@@ -8,7 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="082ae2ae-5ac7-42c1-84ec-68650a844fa1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Phantom.slnx" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom.slnx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Phantom/Phantom.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/Phantom.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" afterDir="false" />
     </list>
@@ -24,15 +25,23 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/BepInExLog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Phantom/Core/IPlugin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Overlay.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Phantom/MonoBehaviours/QuitHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd634be12aae4bd59101de4187d8c03810560d0/7b/d6abb68e/ID3D11ClassInstance.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/51/24f2f7fc/MelonColorAttribute.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/7b/6f705650/NativeHook`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/27b8fc2f2418111c7854c8714f1e9fb73c455694dcb7536267b47e567195f/IL2CPPChainloader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/47c7bb943926ab9fb9e6d9f53d4ca3af02d582b9dfa8cbef96b613cc91e/Logger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8bdea7cd6fc1c76ef696473f3620afb6188f44aee7f79ea4f785d106ee92c9a/BasePlugin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d6532402aa164045a857bb0de1acbe5c26530/_89a10/ConsoleColor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -45,25 +54,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.GPG_PINENTRY_CONFIGURATION_PROPOSAL": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "rider.code.cleanup.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GPG_PINENTRY_CONFIGURATION_PROPOSAL&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;rider.code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Phantom" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -115,7 +124,10 @@
       <workItem from="1766078294371" duration="507000" />
       <workItem from="1766078839816" duration="2883000" />
       <workItem from="1766165773882" duration="336000" />
-      <workItem from="1766166415820" duration="3579000" />
+      <workItem from="1766166415820" duration="7859000" />
+      <workItem from="1766177440164" duration="732000" />
+      <workItem from="1766185530967" duration="868000" />
+      <workItem from="1766189000836" duration="842000" />
     </task>
     <servers />
   </component>
