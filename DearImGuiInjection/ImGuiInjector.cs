@@ -34,8 +34,6 @@ public static class ImGuiInjector
 
     public static string AssetsFolderPath { get; private set; }
 
-    public static ImGuiStyle Style { get; private set; }
-
     /// <summary>
     ///     User supplied function to render the Dear ImGui UI.
     /// </summary>
@@ -45,6 +43,7 @@ public static class ImGuiInjector
         remove => RenderAction -= value;
     }
 
+    // TODO: Replace with MelonLogger.Instance
     public static void Init(
         string imguiIniConfigDirectoryPath,
         string assetsFolder,
@@ -54,9 +53,7 @@ public static class ImGuiInjector
         DearImGuiInjectionLogger.Init(new BepInExLog(logger));
 
         if (!RendererFinder.RendererFinder.Init())
-        {
             return;
-        }
 
         ImGuiIniConfigPath = Path.Combine(imguiIniConfigDirectoryPath, IniFileName);
         AssetsFolderPath = assetsFolder;
@@ -79,9 +76,7 @@ public static class ImGuiInjector
     public static unsafe void Dispose()
     {
         if (!Initialized)
-        {
             return;
-        }
 
         DisposeImplementationFromRendererKind(RendererFinder.RendererFinder.RendererKind);
 
