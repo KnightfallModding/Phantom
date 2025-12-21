@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Numerics;
 using Hexa.NET.ImGui;
 using MelonLoader.Utils;
 using Phantom.GUI.Themes;
@@ -8,6 +9,8 @@ namespace Phantom.GUI;
 public class Overlay
 {
     private readonly Stopwatch _stopwatch;
+
+    private readonly Stopwatch easterEggstopWatch = new();
     private float _delayMs;
     private int _fpsLimit;
     private bool _initialized;
@@ -96,9 +99,56 @@ public class Overlay
 
         ImGui.PushFont(mergedFont, 16);
         ImGui.ShowDemoWindow();
-        ImGui.Text("Test: 😀");
         if (ImGui.Button($"Toggle 30-60 FPS (Currently {FPSLimit}##ToggleFPS"))
             FPSLimit = FPSLimit == 60 ? 30 : 60;
+        ImGui.Text("There is a secret in the main menu. Can you find it?");
+        CreateEasterEgg();
         ImGui.PopFont();
+    }
+
+    private void CreateEasterEgg()
+    {
+        ImGui.Begin(
+            "EasterEgg",
+            ImGuiWindowFlags.NoBackground
+                | ImGuiWindowFlags.NoCollapse
+                | ImGuiWindowFlags.NoDecoration
+        );
+        var button = ImGui.InvisibleButton(" ##EasterEgg", new Vector2(20, 20));
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Is something here?..");
+            ImGui.EndTooltip();
+        }
+
+        var elapsedMs = easterEggstopWatch.Elapsed.TotalMilliseconds;
+        if (elapsedMs is > 0 and < 200)
+        {
+            ImGui.Begin(
+                "EasterEggFound",
+                ImGuiWindowFlags.AlwaysAutoResize
+                    | ImGuiWindowFlags.NoCollapse
+                    | ImGuiWindowFlags.NoResize
+            );
+            ImGui.Text("YOU FOUND THE EASTER EGG 🎉");
+            ImGui.Text("For this you win... Nothing! But congrats!");
+            ImGui.PushFont(null, 8);
+            ImGui.Text(
+                "Fine... You get... Me to congratulate you personally, if you can catch a screenshot of me!"
+            );
+            ImGui.PopFont();
+            ImGui.End();
+        }
+        else
+        {
+            easterEggstopWatch.Reset();
+            easterEggstopWatch.Stop();
+        }
+
+        if (button)
+            easterEggstopWatch.Restart();
+
+        ImGui.End();
     }
 }
