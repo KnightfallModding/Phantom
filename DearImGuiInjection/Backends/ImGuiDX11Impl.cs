@@ -41,7 +41,7 @@ public static class ImGuiDX11Impl
             )
         )
         {
-            Log.Error("Failed to init ImGui Impl D3D11");
+            DearImGuiInjectionLogger.Error("Failed to init ImGui Impl D3D11");
         }
     }
 

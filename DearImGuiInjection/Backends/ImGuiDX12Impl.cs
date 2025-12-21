@@ -74,7 +74,7 @@ public static class ImGuiDX12Impl
 
         if (!ImGuiImplD3D12.Init(info))
         {
-            Log.Error("Failed to init ImGui Impl D3D12");
+            DearImGuiInjectionLogger.Error("Failed to init ImGui Impl D3D12");
         }
     }
 

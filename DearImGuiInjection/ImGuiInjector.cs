@@ -51,7 +51,7 @@ public static class ImGuiInjector
         ManualLogSource logger
     )
     {
-        Log.Init(new BepInExLog(logger));
+        DearImGuiInjectionLogger.Init(new BepInExLog(logger));
 
         if (!RendererFinder.RendererFinder.Init())
         {

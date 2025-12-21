@@ -9,11 +9,17 @@
   <component name="ChangeListManager">
     <list default="true" id="082ae2ae-5ac7-42c1-84ec-68650a844fa1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Fonts/Comfortaa-Medium.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Shaders/imgui-frag.hlsl.bytes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Assets/Shaders/imgui-vertex.hlsl.bytes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/ImGuiInjector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/ImGuiInjector.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Log.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjectionLogger.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Phantom/Phantom.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/Phantom.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,10 +33,14 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/BepInExLog.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/INativeDetour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/ImGuiInjector.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/Core/IPlugin.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Overlay.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Catpuccin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/ITheme.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Modern.cs" root0="FORCE_HIGHLIGHTING" />
@@ -63,25 +73,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.GPG_PINENTRY_CONFIGURATION_PROPOSAL": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "rider.code.cleanup.on.save": "true",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.GPG_PINENTRY_CONFIGURATION_PROPOSAL&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;do_not_show_solution_notification&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;rider.code.cleanup.on.save&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Phantom" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -139,6 +150,10 @@
       <workItem from="1766189000836" duration="4500000" />
       <workItem from="1766234115450" duration="1647000" />
       <workItem from="1766238462839" duration="12047000" />
+      <workItem from="1766250652385" duration="3879000" />
+      <workItem from="1766265524098" duration="312000" />
+      <workItem from="1766272520118" duration="51000" />
+      <workItem from="1766275402468" duration="1573000" />
     </task>
     <servers />
   </component>

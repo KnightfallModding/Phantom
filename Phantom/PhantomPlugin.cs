@@ -7,7 +7,6 @@ using HarmonyLib;
 using HexaGen.Runtime;
 using Il2CppInterop.Runtime.InteropTypes;
 using Phantom.GUI;
-using Phantom.MonoBehaviours;
 
 namespace Phantom;
 
@@ -33,7 +32,7 @@ public class PhantomPlugin : BasePlugin
 
         Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
         SetupOverlay();
-        AddComponent<QuitHandler>();
+        // AddComponent<QuitHandler>();
     }
 
     private static void SetupOverlay()

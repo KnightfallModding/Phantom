@@ -1,5 +1,5 @@
 ﻿using System;
-using BepInEx.Unity.IL2CPP.Hook;
+using DearImGuiInjection.BepInEx;
 using DearImGuiInjection.CppInterop;
 using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
@@ -213,7 +213,6 @@ public class DX11Renderer : IRenderer
                     uint
                 > item in _onPresentAction.GetInvocationList()
             )
-            {
                 try
                 {
                     item(swapChain, syncInterval, flags);
@@ -222,7 +221,6 @@ public class DX11Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         return _swapChainPresentHookOriginal(self, syncInterval, flags);
@@ -253,7 +251,6 @@ public class DX11Renderer : IRenderer
                     uint
                 > item in _preResizeBuffers.GetInvocationList()
             )
-            {
                 try
                 {
                     item(swapChain, bufferCount, width, height, newFormat, swapchainFlags);
@@ -262,7 +259,6 @@ public class DX11Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         var result = _swapChainResizeBuffersHookOriginal(
@@ -286,7 +282,6 @@ public class DX11Renderer : IRenderer
                     uint
                 > item in _postResizeBuffers.GetInvocationList()
             )
-            {
                 try
                 {
                     item(swapChain, bufferCount, width, height, newFormat, swapchainFlags);
@@ -295,7 +290,6 @@ public class DX11Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         return result;

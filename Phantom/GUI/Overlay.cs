@@ -97,6 +97,8 @@ public class Overlay
         ImGui.PushFont(mergedFont, 16);
         ImGui.ShowDemoWindow();
         ImGui.Text("Test: 😀");
+        if (ImGui.Button($"Toggle 30-60 FPS (Currently {FPSLimit}##ToggleFPS"))
+            FPSLimit = FPSLimit == 60 ? 30 : 60;
         ImGui.PopFont();
     }
 }

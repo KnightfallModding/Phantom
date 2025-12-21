@@ -46,7 +46,7 @@ internal static class ImGuiDX11
         _renderTargetView.Dispose();
         _renderTargetView = default;
 
-        Log.Info("ImGui.ImGuiImplDX11Shutdown()");
+        DearImGuiInjectionLogger.Info("ImGui.ImGuiImplDX11Shutdown()");
         ImGuiDX11Impl.Shutdown();
 
         _windowHandle = IntPtr.Zero;
@@ -87,7 +87,7 @@ internal static class ImGuiDX11
             return;
         }
 
-        Log.Info($"ImGuiImplWin32Init, Window Handle: {windowHandle:X}");
+        DearImGuiInjectionLogger.Info($"ImGuiImplWin32Init, Window Handle: {windowHandle:X}");
         ImGuiWin32Impl.Init(_windowHandle);
 
         _myWindowProc = WndProcHandler;
@@ -202,7 +202,7 @@ internal static class ImGuiDX11
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    DearImGuiInjectionLogger.Error(e);
                 }
             }
         }
@@ -235,11 +235,11 @@ internal static class ImGuiDX11
         swapChain.Get().GetDesc(&desc);
         var windowHandle = desc.OutputWindow;
 
-        Log.Info($"[DX11 ResizeBuffers] Window Handle {windowHandle:X}");
+        DearImGuiInjectionLogger.Info($"[DX11 ResizeBuffers] Window Handle {windowHandle:X}");
 
         if (!IsTargetWindowHandle(windowHandle))
         {
-            Log.Info(
+            DearImGuiInjectionLogger.Info(
                 $"[DX11 ResizeBuffers] Discarding window handle {windowHandle:X} due to mismatch"
             );
             return;
@@ -270,7 +270,7 @@ internal static class ImGuiDX11
 
         if (!IsTargetWindowHandle(windowHandle))
         {
-            Log.Info(
+            DearImGuiInjectionLogger.Info(
                 $"[DX11 ResizeBuffers] Discarding window handle {windowHandle:X} due to mismatch"
             );
             return;

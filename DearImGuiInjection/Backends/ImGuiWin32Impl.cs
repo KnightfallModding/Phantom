@@ -40,7 +40,7 @@ public static unsafe class ImGuiWin32Impl
         var io = ImGui.GetIO();
         if (_windowHandle != IntPtr.Zero)
         {
-            Log.Error("Already initialized a platform backend!");
+            DearImGuiInjectionLogger.Error("Already initialized a platform backend!");
             return false;
         }
 
@@ -114,7 +114,7 @@ public static unsafe class ImGuiWin32Impl
     {
         if (_windowHandle == IntPtr.Zero)
         {
-            Log.Error("No platform backend to shutdown, or already shutdown?");
+            DearImGuiInjectionLogger.Error("No platform backend to shutdown, or already shutdown?");
             return;
         }
 

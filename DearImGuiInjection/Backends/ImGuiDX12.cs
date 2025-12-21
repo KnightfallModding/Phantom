@@ -24,7 +24,7 @@ internal static class ImGuiDX12
 
     internal static void Init()
     {
-        Log.Info("ImGuiDX12.Init");
+        DearImGuiInjectionLogger.Info("ImGuiDX12.Init");
 
         DX12Renderer.OnPresent += InitImGui;
 
@@ -53,7 +53,7 @@ internal static class ImGuiDX12
 
         ImGuiWin32Impl.Shutdown();
 
-        Log.Info("ImGui.ImGuiImplDX12Shutdown()");
+        DearImGuiInjectionLogger.Info("ImGui.ImGuiImplDX12Shutdown()");
         ImGuiDX12Impl.Shutdown();
 
         _windowHandle = IntPtr.Zero;
@@ -72,7 +72,7 @@ internal static class ImGuiDX12
             return false;
         }
 
-        Log.Info("Retrieved the command queue.");
+        DearImGuiInjectionLogger.Info("Retrieved the command queue.");
         _commandQueue = commandQueue;
         return true;
     }
@@ -90,7 +90,7 @@ internal static class ImGuiDX12
 
         if (!ImGuiInjector.Initialized)
         {
-            Log.Info("DearImGuiInjection.InitImGui()");
+            DearImGuiInjectionLogger.Info("DearImGuiInjection.InitImGui()");
             ImGuiInjector.InitImGui();
 
             InitImGuiWin32(windowHandle);
@@ -113,7 +113,7 @@ internal static class ImGuiDX12
                 return;
             }
 
-            Log.Info($"ImGuiImplWin32Init, Window Handle: {windowHandle:X}");
+            DearImGuiInjectionLogger.Info($"ImGuiImplWin32Init, Window Handle: {windowHandle:X}");
             ImGuiWin32Impl.Init(_windowHandle);
 
             _myWindowProc = WndProcHandler;
@@ -143,7 +143,7 @@ internal static class ImGuiDX12
             &gpuHandle
         );
 
-        Log.Info("InitImGuiDX12 Finished.");
+        DearImGuiInjectionLogger.Info("InitImGuiDX12 Finished.");
     }
 
     private static unsafe ComPtr<ID3D12Device> InitImGuiDX12Internal(
@@ -295,7 +295,9 @@ internal static class ImGuiDX12
 
         if (!IsTargetWindowHandle(windowHandle))
         {
-            Log.Info($"[DX12] Discarding window handle {windowHandle:X} due to mismatch");
+            DearImGuiInjectionLogger.Info(
+                $"[DX12] Discarding window handle {windowHandle:X} due to mismatch"
+            );
             return;
         }
 
@@ -374,7 +376,7 @@ internal static class ImGuiDX12
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    DearImGuiInjectionLogger.Error(e);
                 }
             }
         }
@@ -410,7 +412,7 @@ internal static class ImGuiDX12
 
         if (!IsTargetWindowHandle(windowHandle))
         {
-            Log.Info(
+            DearImGuiInjectionLogger.Info(
                 $"[DX12 ResizeBuffers] Discarding window handle {windowHandle:X} due to mismatch"
             );
             return;
@@ -438,7 +440,7 @@ internal static class ImGuiDX12
 
         if (!IsTargetWindowHandle(windowHandle))
         {
-            Log.Info(
+            DearImGuiInjectionLogger.Info(
                 $"[DX12 ResizeBuffers] Discarding window handle {windowHandle:X} due to mismatch"
             );
             return;

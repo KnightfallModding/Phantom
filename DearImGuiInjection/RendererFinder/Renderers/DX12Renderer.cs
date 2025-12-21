@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using BepInEx.Unity.IL2CPP.Hook;
+using DearImGuiInjection.BepInEx;
 using DearImGuiInjection.CppInterop;
 using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
@@ -214,7 +214,6 @@ public class DX12Renderer : IRenderer
                     .GetInvocationList()
                     .Cast<Action<ComPtr<IDXGISwapChain3>, uint, uint, IntPtr>>()
             )
-            {
                 try
                 {
                     item(swapChain, syncInterval, flags, presentParameters);
@@ -223,7 +222,6 @@ public class DX12Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         return _swapchainPresentHookOriginal(self, syncInterval, flags, presentParameters);
@@ -249,7 +247,6 @@ public class DX12Renderer : IRenderer
                     .GetInvocationList()
                     .Cast<Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int>>()
             )
-            {
                 try
                 {
                     item(swapChain, bufferCount, width, height, newFormat, swapchainFlags);
@@ -258,7 +255,6 @@ public class DX12Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         var result = _swapChainResizeBufferHookOriginal(
@@ -277,7 +273,6 @@ public class DX12Renderer : IRenderer
                     .GetInvocationList()
                     .Cast<Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int>>()
             )
-            {
                 try
                 {
                     item(swapChain, bufferCount, width, height, newFormat, swapchainFlags);
@@ -286,7 +281,6 @@ public class DX12Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
-            }
         }
 
         return result;
@@ -311,20 +305,16 @@ public class DX12Renderer : IRenderer
                         .GetInvocationList()
                         .Cast<Func<ComPtr<ID3D12CommandQueue>, uint, IntPtr, bool>>()
                 )
-                {
                     try
                     {
                         var res = item(commandQueue, numCommandLists, ppCommandLists);
                         if (res)
-                        {
                             executedThings = true;
-                        }
                     }
                     catch (Exception e)
                     {
                         Log.Error(e);
                     }
-                }
             }
         }
 
@@ -332,9 +322,7 @@ public class DX12Renderer : IRenderer
 
         // Investigate at some point why it's needed for unity...
         if (executedThings)
-        {
             _commandQueueExecuteCommandListHook.Dispose();
-        }
     }
 
     private delegate IntPtr CDXGISwapChainPresent1Delegate(
