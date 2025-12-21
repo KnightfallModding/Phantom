@@ -1,10 +1,27 @@
 <Project>
   <ItemGroup>
-    <Reference Include="Il2Cppmscorlib">
+    <Reference Include="Il2cppmscorlib">
       <HintPath>$(MSBuildThisFileDirectory)/Libs/Il2Cppmscorlib.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="MelonLoader">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/MelonLoader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Harmony">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="UnityEngine">
+      <HintPath>$(MSBuildThisFileDirectory)/Libs/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(MSBuildThisFileDirectory)/Libs/UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>

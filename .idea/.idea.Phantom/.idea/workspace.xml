@@ -9,17 +9,29 @@
   <component name="ChangeListManager">
     <list default="true" id="082ae2ae-5ac7-42c1-84ec-68650a844fa1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Phantom/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX11Impl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiDX12Impl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/Backends/ImGuiWin32Impl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/BepInEx/BepInExLog.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/BepInEx/DobbyDetour.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/BepInEx/DobbyLib.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/BepInEx/INativeDetour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/BepInEx/INativeDetour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjection.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjection.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjectionLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjectionLogger.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DearImGuiInjection/ImGuiInjector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/ImGuiInjector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DearImGuiInjection/Log.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/DearImGuiInjectionLogger.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX11Renderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DearImGuiInjection/RendererFinder/Renderers/DX12Renderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs.props" beforeDir="false" afterPath="$PROJECT_DIR$/Libs.props" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/Assembly-CSharp.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Libs/Assembly-CSharp.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/MelonLoader.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Libs/MelonLoader.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/System.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/UnityEngine.CoreModule.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Libs/UnityEngine.CoreModule.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/UnityEngine.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Libs/UnityEngine.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Libs/mscorlib.dll" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/GUI/Overlay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/MonoBehaviours/QuitHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/MonoBehaviours/QuitHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Patches/BepInEx/Logging/ConsoleLogListener.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Patches/BepInEx/Logging/LogEventArgs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Phantom.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/Phantom.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Phantom/PhantomPlugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Phantom/Utils/ConsoleUtils.cs" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,19 +45,15 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/BepInExLog.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/DearImGuiInjection/BepInEx/INativeDetour.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/DearImGuiInjection/ImGuiInjector.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/Core/IPlugin.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Overlay.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:////wsl.localhost/Arch/home/aeryle/projects/mods/Knightfall/Phantom/Phantom/GUI/Overlay.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Catpuccin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/ITheme.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/GUI/Themes/Modern.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/MonoBehaviours/QuitHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Phantom/obj/project.assets.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4bf33f093f58461ba881f80a779792b31e9400/00/e281d34a/MelonLogger.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a5b41b67c1024476b7ad5eb17bd3d95213800/65/5bc9d487/ImGuiImplD3D11.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/c7ecaddae04f4313a4d32a3e9b570a065910/24/2b3b209b/Unsafe.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/dd634be12aae4bd59101de4187d8c03810560d0/7b/d6abb68e/ID3D11ClassInstance.cs" root0="FORCE_HIGHLIGHTING" />
@@ -53,7 +61,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f00e523f7e0a48f78dc21585f68e34e91d6a00/7b/6f705650/NativeHook`1.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1be0ce539b6a1b9e6410845b1215fd522a0b5a5938f4fa91407c1bb1e9ecf8/ID3D12DescriptorHeap.gen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/27b8fc2f2418111c7854c8714f1e9fb73c455694dcb7536267b47e567195f/IL2CPPChainloader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/412c916bc4554ce7468977bac13430ad745fe7201f6d6d6fe99a971985f6ce/LibraryImportAttribute.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/47c7bb943926ab9fb9e6d9f53d4ca3af02d582b9dfa8cbef96b613cc91e/Logger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/654dab084ef4d88a0584d59ecefd7dfb6989457afe1cf4e42534f8d28af/DetourProvider.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8bdea7cd6fc1c76ef696473f3620afb6188f44aee7f79ea4f785d106ee92c9a/BasePlugin.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d6532402aa164045a857bb0de1acbe5c26530/_89a10/ConsoleColor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -153,7 +163,9 @@
       <workItem from="1766250652385" duration="3879000" />
       <workItem from="1766265524098" duration="312000" />
       <workItem from="1766272520118" duration="51000" />
-      <workItem from="1766275402468" duration="1573000" />
+      <workItem from="1766275402468" duration="2394000" />
+      <workItem from="1766277848758" duration="159000" />
+      <workItem from="1766278025621" duration="6471000" />
     </task>
     <servers />
   </component>

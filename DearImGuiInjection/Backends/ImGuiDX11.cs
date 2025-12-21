@@ -31,9 +31,7 @@ internal static class ImGuiDX11
     internal static void Dispose()
     {
         if (!ImGuiInjector.Initialized)
-        {
             return;
-        }
 
         DX11Renderer.PostResizeBuffers -= PostResizeBuffers;
         DX11Renderer.PreResizeBuffers -= PreResizeBuffers;
@@ -77,15 +75,11 @@ internal static class ImGuiDX11
     private static void InitImGuiWin32(IntPtr windowHandle)
     {
         if (ImGuiInjector.Initialized)
-        {
             return;
-        }
 
         _windowHandle = windowHandle;
         if (_windowHandle == IntPtr.Zero)
-        {
             return;
-        }
 
         DearImGuiInjectionLogger.Info($"ImGuiImplWin32Init, Window Handle: {windowHandle:X}");
         ImGuiWin32Impl.Init(_windowHandle);
@@ -144,9 +138,7 @@ internal static class ImGuiDX11
             ImGuiInjector.IsCursorVisible
             && ImGuiWin32Impl.WndProcHandler(windowHandle, message, wParam, lParam)
         )
-        {
             return IntPtr.Zero;
-        }
 
         return User32.CallWindowProc(_originalWindowProc, windowHandle, message, wParam, lParam);
     }
@@ -180,9 +172,7 @@ internal static class ImGuiDX11
     private static bool IsTargetWindowHandle(IntPtr windowHandle)
     {
         if (windowHandle != IntPtr.Zero)
-        {
             return windowHandle == _windowHandle || !ImGuiInjector.Initialized;
-        }
 
         return false;
     }
@@ -195,7 +185,6 @@ internal static class ImGuiDX11
         if (ImGuiInjector.RenderAction != null)
         {
             foreach (Action item in ImGuiInjector.RenderAction.GetInvocationList())
-            {
                 try
                 {
                     item();
@@ -204,7 +193,6 @@ internal static class ImGuiDX11
                 {
                     DearImGuiInjectionLogger.Error(e);
                 }
-            }
         }
 
         ImGui.EndFrame();
@@ -227,9 +215,7 @@ internal static class ImGuiDX11
     )
     {
         if (!ImGuiInjector.Initialized)
-        {
             return;
-        }
 
         SilkDXGI.SwapChainDesc desc;
         swapChain.Get().GetDesc(&desc);
@@ -260,9 +246,7 @@ internal static class ImGuiDX11
     )
     {
         if (!ImGuiInjector.Initialized)
-        {
             return;
-        }
 
         SilkDXGI.SwapChainDesc desc;
         swapChain.Get().GetDesc(&desc);

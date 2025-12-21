@@ -3,6 +3,7 @@ using DearImGuiInjection.BepInEx;
 using DearImGuiInjection.CppInterop;
 using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
+using MelonLoader.NativeUtils;
 using Silk.NET.Core.Native;
 using SilkD3D11 = Silk.NET.Direct3D11;
 using SilkDXGI = Silk.NET.DXGI;
@@ -47,15 +48,13 @@ public class DX11Renderer : IRenderer
     private static readonly CDXGISwapChainPresentDelegate _swapChainPresentHookDelegate =
         SwapChainPresentHook;
 
-    private static CDXGISwapChainPresentDelegate _swapChainPresentHookOriginal;
-    private static INativeDetour _swapChainPresentHook;
+    private static NativeHook<CDXGISwapChainPresentDelegate> _swapChainPresentHook;
     private static Action<ComPtr<SilkDXGI.IDXGISwapChain>, uint, uint> _onPresentAction;
 
     private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookDelegate =
         SwapChainResizeBuffersHook;
 
-    private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBuffersHookOriginal;
-    private static INativeDetour _swapChainResizeBuffersHook;
+    private static NativeHook<CDXGISwapChainResizeBuffersDelegate> _swapChainResizeBuffersHook;
 
     private static Action<
         ComPtr<SilkDXGI.IDXGISwapChain>,
@@ -135,14 +134,12 @@ public class DX11Renderer : IRenderer
 
         _swapChainPresentHook = INativeDetour.CreateAndApply(
             (nint)swapChainPresentFunctionPtr,
-            _swapChainPresentHookDelegate,
-            out _swapChainPresentHookOriginal
+            _swapChainPresentHookDelegate
         );
 
         _swapChainResizeBuffersHook = INativeDetour.CreateAndApply(
             (nint)swapChainResizeBuffersFunctionPtr,
-            _swapChainResizeBuffersHookDelegate,
-            out _swapChainResizeBuffersHookOriginal
+            _swapChainResizeBuffersHookDelegate
         );
 
         Log.Info("DX11Renderer.Init() end");
@@ -152,10 +149,10 @@ public class DX11Renderer : IRenderer
 
     public void Dispose()
     {
-        _swapChainResizeBuffersHook?.Dispose();
+        _swapChainResizeBuffersHook?.Detach();
         _swapChainResizeBuffersHook = null;
 
-        _swapChainPresentHook?.Dispose();
+        _swapChainPresentHook?.Detach();
         _swapChainPresentHook = null;
 
         _onPresentAction = null;
@@ -206,13 +203,9 @@ public class DX11Renderer : IRenderer
 
         if (_onPresentAction != null)
         {
-            foreach (
-                Action<
-                    ComPtr<SilkDXGI.IDXGISwapChain>,
-                    uint,
-                    uint
-                > item in _onPresentAction.GetInvocationList()
-            )
+            foreach (var @delegate in _onPresentAction.GetInvocationList())
+            {
+                var item = (Action<ComPtr<SilkDXGI.IDXGISwapChain>, uint, uint>)@delegate;
                 try
                 {
                     item(swapChain, syncInterval, flags);
@@ -221,9 +214,10 @@ public class DX11Renderer : IRenderer
                 {
                     Log.Error(e);
                 }
+            }
         }
 
-        return _swapChainPresentHookOriginal(self, syncInterval, flags);
+        return _swapChainPresentHook.Trampoline(self, syncInterval, flags);
     }
 
     private static unsafe IntPtr SwapChainResizeBuffersHook(
@@ -261,7 +255,7 @@ public class DX11Renderer : IRenderer
                 }
         }
 
-        var result = _swapChainResizeBuffersHookOriginal(
+        var result = _swapChainResizeBuffersHook.Trampoline(
             swapchainPtr,
             bufferCount,
             width,

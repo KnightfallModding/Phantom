@@ -1,6 +1,6 @@
 using System.Diagnostics;
-using BepInEx;
 using Hexa.NET.ImGui;
+using MelonLoader.Utils;
 using Phantom.GUI.Themes;
 
 namespace Phantom.GUI;
@@ -56,7 +56,7 @@ public class Overlay
 
     public unsafe void LoadFonts()
     {
-        var fontsPath = Path.Join(Paths.PluginPath, "Phantom", "Fonts");
+        var fontsPath = Path.Join(MelonEnvironment.PluginsDirectory, "Phantom", "Fonts");
         var normalFontPath = Path.Join(fontsPath, "Comfortaa-Medium.ttf");
         var emojisFontPath = Path.Join(fontsPath, "Twemoji.ttf");
 

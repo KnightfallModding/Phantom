@@ -43,7 +43,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="Harmonize" Version="1.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -80,11 +79,8 @@ static class PhantomInfo
   </Target>
 
   <Target Name="BundleBuildArtifacts">
-    <MakeDir Directories="$(OutputDir)/BepInEx/plugins/Libraries/" />
-    <Move
-      SourceFiles="$(OutputDir)/$(AssemblyName).dll"
-      DestinationFolder="$(OutputDir)/BepInEx/plugins"
-    />
+    <MakeDir Directories="$(OutputDir)/UserLibs/" />
+    <Move SourceFiles="$(OutputDir)/$(AssemblyName).dll" DestinationFolder="$(OutputDir)/Plugins" />
     <ZipDirectory
       SourceDirectory="$(OutputDir)"
       DestinationFile="release/$(ProductName) v$(Version).zip"

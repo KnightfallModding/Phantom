@@ -2,11 +2,10 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using BepInEx.Logging;
 using DearImGuiInjection.Backends;
-using DearImGuiInjection.BepInEx;
 using DearImGuiInjection.RendererFinder.Renderers;
 using Hexa.NET.ImGui;
+using MelonLoader;
 
 namespace DearImGuiInjection;
 
@@ -47,10 +46,10 @@ public static class ImGuiInjector
     public static void Init(
         string imguiIniConfigDirectoryPath,
         string assetsFolder,
-        ManualLogSource logger
+        MelonLogger.Instance logger
     )
     {
-        DearImGuiInjectionLogger.Init(new BepInExLog(logger));
+        DearImGuiInjectionLogger.Init(logger);
 
         if (!RendererFinder.RendererFinder.Init())
             return;

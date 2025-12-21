@@ -37,20 +37,15 @@
     <PackageReference Include="Silk.NET.Direct3D12" Version="2.22.0" />
   </ItemGroup>
 
+  <Import Project="../Libs.props" />
+
   <ItemGroup>
-    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be*" PrivateAssets="all" />
-
-    <Reference Include="Il2cppmscorlib">
-      <HintPath>../Libs/Il2Cppmscorlib.dll</HintPath>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>$(SolutionDir)/Libs/MonoMod.RuntimeDetour.dll</HintPath>
       <Private>false</Private>
     </Reference>
-
-    <Reference Include="UnityEngine">
-      <HintPath>../Libs/UnityEngine.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>../Libs/UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>$(SolutionDir)/Libs/MonoMod.Utils.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>

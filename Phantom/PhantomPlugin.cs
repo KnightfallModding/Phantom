@@ -1,36 +1,29 @@
-﻿using System.Reflection;
-using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Unity.IL2CPP;
-using DearImGuiInjection;
-using HarmonyLib;
+﻿using DearImGuiInjection;
 using HexaGen.Runtime;
-using Il2CppInterop.Runtime.InteropTypes;
+using MelonLoader;
+using MelonLoader.Utils;
+using Phantom;
 using Phantom.GUI;
-using Phantom.MonoBehaviours;
+
+[assembly: MelonGame("Landfall Games", "Knightfall")]
+[assembly: MelonInfo(
+    typeof(PhantomPlugin),
+    PhantomInfo.Name,
+    PhantomInfo.Version,
+    PhantomInfo.Description
+)]
 
 namespace Phantom;
 
-[BepInPlugin(PhantomInfo.Id, PhantomInfo.Name, PhantomInfo.Version)]
-public class PhantomPlugin : BasePlugin
+public class PhantomPlugin : MelonPlugin
 {
-    // TODO: Replace with MelonLogger.Instance
     // ReSharper disable once NullableWarningSuppressionIsUsed
-    public static ManualLogSource Logger { get; private set; } = null!;
+    public static MelonLogger.Instance Logger { get; private set; } = null!;
 
-    // TODO: Remove when migrated to ML
-    // ReSharper disable once UnusedMethodReturnValue.Global
-    public static new T AddComponent<T>()
-        where T : Il2CppObjectBase => IL2CPPChainloader.AddUnityComponent<T>();
-
-    public override void Load()
+    public override void OnInitializeMelon()
     {
-        Logger = Log;
-        Logger.LogInfo("Initializing Phantom Plugin");
-
-        // TODO: Remove when migrated to ML
-        Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
-        AddComponent<QuitHandler>();
+        Logger = LoggerInstance;
+        Logger.Msg("Initializing Phantom Plugin");
 
         // DearImGuiInjection setup
         SetupOverlay();
@@ -40,13 +33,13 @@ public class PhantomPlugin : BasePlugin
     {
         // TODO: Replace `Paths` with `MelonEnvironments`
         // `Hexa.NET.ImGui` won't find `cimgui` without specifying the path
-        var cimguiPath = Path.Join(Paths.PluginPath, "Libraries");
+        var cimguiPath = Path.Join(MelonEnvironment.PluginsDirectory, "Libraries");
         LibraryLoader.CustomLoadFolders.Add(cimguiPath);
 
         var overlay = new Overlay();
         // TODO: Replace `Paths` with `MelonEnvironments`
-        var imGuiConfigPath = Paths.GameRootPath;
-        var assetsFolder = Path.Join(Paths.PluginPath, PhantomInfo.Name, "Assets");
+        var imGuiConfigPath = MelonEnvironment.GameRootDirectory;
+        var assetsFolder = Path.Join(MelonEnvironment.PluginsDirectory, PhantomInfo.Name, "Assets");
         ImGuiInjector.Init(imGuiConfigPath, assetsFolder, Logger);
         ImGuiInjector.Render += overlay.Render;
     }

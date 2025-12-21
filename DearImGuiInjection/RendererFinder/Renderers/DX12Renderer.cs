@@ -4,6 +4,7 @@ using DearImGuiInjection.BepInEx;
 using DearImGuiInjection.CppInterop;
 using DearImGuiInjection.RendererFinder.Windows;
 using Il2CppInterop.Runtime;
+using MelonLoader.NativeUtils;
 using Silk.NET.Core.Native;
 using Silk.NET.Direct3D12;
 using Silk.NET.DXGI;
@@ -15,23 +16,20 @@ public class DX12Renderer : IRenderer
     private static readonly CDXGISwapChainPresent1Delegate _swapchainPresentHookDelegate =
         SwapChainPresentHook;
 
-    private static CDXGISwapChainPresent1Delegate _swapchainPresentHookOriginal;
-    private static INativeDetour _swapChainPresentHook;
+    private static NativeHook<CDXGISwapChainPresent1Delegate> _swapChainPresentHook;
     private static Action<ComPtr<IDXGISwapChain3>, uint, uint, IntPtr> _onPresentAction;
 
     private static readonly CDXGISwapChainResizeBuffersDelegate _swapChainResizeBufferHookDelegate =
         SwapChainResizeBuffersHook;
 
-    private static CDXGISwapChainResizeBuffersDelegate _swapChainResizeBufferHookOriginal;
-    private static INativeDetour _swapChainResizeBufferHook;
+    private static NativeHook<CDXGISwapChainResizeBuffersDelegate> _swapChainResizeBufferHook;
     private static Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> _preResizeBuffers;
     private static Action<ComPtr<IDXGISwapChain3>, int, int, int, int, int> _postResizeBuffers;
 
     private static readonly CommandQueueExecuteCommandListDelegate _commandQueueExecuteCommandListHookDelegate =
         CommandQueueExecuteCommandListHook;
 
-    private static CommandQueueExecuteCommandListDelegate _commandQueueExecuteCommandListHookOriginal;
-    private static INativeDetour _commandQueueExecuteCommandListHook;
+    private static NativeHook<CommandQueueExecuteCommandListDelegate> _commandQueueExecuteCommandListHook;
     private static readonly object _onExecuteCommandListActionLock = new();
 
     public unsafe bool Init()
@@ -115,20 +113,17 @@ public class DX12Renderer : IRenderer
 
         _swapChainPresentHook = INativeDetour.CreateAndApply(
             (nint)swapChainVTable.TableEntries[Present1MethodTableIndex].FunctionPointer,
-            _swapchainPresentHookDelegate,
-            out _swapchainPresentHookOriginal
+            _swapchainPresentHookDelegate
         );
 
         _swapChainResizeBufferHook = INativeDetour.CreateAndApply(
             (nint)swapChainVTable.TableEntries[ResizeBufferMethodTableIndex].FunctionPointer,
-            _swapChainResizeBufferHookDelegate,
-            out _swapChainResizeBufferHookOriginal
+            _swapChainResizeBufferHookDelegate
         );
 
         _commandQueueExecuteCommandListHook = INativeDetour.CreateAndApply(
             (nint)commandQueueVTable.TableEntries[ExecuteCommandListTableIndex].FunctionPointer,
-            _commandQueueExecuteCommandListHookDelegate,
-            out _commandQueueExecuteCommandListHookOriginal
+            _commandQueueExecuteCommandListHookDelegate
         );
 
         return true;
@@ -136,13 +131,13 @@ public class DX12Renderer : IRenderer
 
     public void Dispose()
     {
-        _swapChainResizeBufferHook?.Dispose();
+        _swapChainResizeBufferHook?.Detach();
         _swapChainResizeBufferHook = null;
 
-        _commandQueueExecuteCommandListHook?.Dispose();
+        _commandQueueExecuteCommandListHook?.Detach();
         _commandQueueExecuteCommandListHook = null;
 
-        _swapChainPresentHook?.Dispose();
+        _swapChainPresentHook?.Detach();
         _swapChainPresentHook = null;
 
         _onPresentAction = null;
@@ -224,7 +219,7 @@ public class DX12Renderer : IRenderer
                 }
         }
 
-        return _swapchainPresentHookOriginal(self, syncInterval, flags, presentParameters);
+        return _swapChainPresentHook.Trampoline(self, syncInterval, flags, presentParameters);
     }
 
     private static unsafe IntPtr SwapChainResizeBuffersHook(
@@ -257,7 +252,7 @@ public class DX12Renderer : IRenderer
                 }
         }
 
-        var result = _swapChainResizeBufferHookOriginal(
+        var result = _swapChainResizeBufferHook.Trampoline(
             swapchainPtr,
             bufferCount,
             width,
@@ -318,11 +313,11 @@ public class DX12Renderer : IRenderer
             }
         }
 
-        _commandQueueExecuteCommandListHookOriginal(self, numCommandLists, ppCommandLists);
+        _commandQueueExecuteCommandListHook.Trampoline(self, numCommandLists, ppCommandLists);
 
         // Investigate at some point why it's needed for unity...
         if (executedThings)
-            _commandQueueExecuteCommandListHook.Dispose();
+            _commandQueueExecuteCommandListHook.Detach();
     }
 
     private delegate IntPtr CDXGISwapChainPresent1Delegate(
