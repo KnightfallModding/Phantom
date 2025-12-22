@@ -113,6 +113,7 @@ public class Overlay
             ImGuiWindowFlags.NoBackground
                 | ImGuiWindowFlags.NoCollapse
                 | ImGuiWindowFlags.NoDecoration
+                | ImGuiWindowFlags.NoSavedSettings
         );
         var button = ImGui.InvisibleButton(" ##EasterEgg", new Vector2(20, 20));
         if (ImGui.IsItemHovered())
@@ -130,6 +131,7 @@ public class Overlay
                 ImGuiWindowFlags.AlwaysAutoResize
                     | ImGuiWindowFlags.NoCollapse
                     | ImGuiWindowFlags.NoResize
+                    | ImGuiWindowFlags.NoSavedSettings
             );
             ImGui.Text("YOU FOUND THE EASTER EGG 🎉");
             ImGui.Text("For this you win... Nothing! But congrats!");
