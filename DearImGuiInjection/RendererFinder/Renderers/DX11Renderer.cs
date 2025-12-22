@@ -133,12 +133,12 @@ public class DX11Renderer : IRenderer
         User32.DestroyWindow(windowHandle);
 
         _swapChainPresentHook = INativeDetour.CreateAndApply(
-            (nint)swapChainPresentFunctionPtr,
+            SteamBypass.ResolveJmpChain((nint)swapChainPresentFunctionPtr),
             _swapChainPresentHookDelegate
         );
 
         _swapChainResizeBuffersHook = INativeDetour.CreateAndApply(
-            (nint)swapChainResizeBuffersFunctionPtr,
+            SteamBypass.ResolveJmpChain((nint)swapChainResizeBuffersFunctionPtr),
             _swapChainResizeBuffersHookDelegate
         );
 
@@ -158,10 +158,7 @@ public class DX11Renderer : IRenderer
         _onPresentAction = null;
     }
 
-    public static void AttachThread()
-    {
-        IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
-    }
+    public static void AttachThread() => IL2CPP.il2cpp_thread_attach(IL2CPP.il2cpp_domain_get());
 
     public static event Action<ComPtr<SilkDXGI.IDXGISwapChain>, uint, uint> OnPresent
     {
