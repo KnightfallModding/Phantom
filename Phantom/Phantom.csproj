@@ -32,6 +32,8 @@
     <Product>Phantom</Product>
     <ProductName>Phantom</ProductName>
     <Author>Aeryle</Author>
+
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
 
   <!-- Variables -->
@@ -43,14 +45,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" PrivateAssets="all" />
-
     <PackageReference Include="Harmonize" Version="1.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
 
-    <ProjectReference Include="../DearImGuiInjection/DearImGuiInjection.csproj" Private="false" />
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="../DearImGuiInjection/DearImGuiInjection.csproj" />
+
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <Reference Include="DearImGuiInjection">
+      <HintPath>$(MSBuildThisFileDirectory)/../DearImGuiInjection/release/net6.0/DearImGuiInjection.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Import Project="../Libs.props" />

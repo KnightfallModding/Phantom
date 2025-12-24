@@ -41,11 +41,11 @@
 
   <ItemGroup>
     <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>$(SolutionDir)/Libs/MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>$(MSBuildThisFileDirectory)/../Libs/MonoMod.RuntimeDetour.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="MonoMod.Utils">
-      <HintPath>$(SolutionDir)/Libs/MonoMod.Utils.dll</HintPath>
+      <HintPath>$(MSBuildThisFileDirectory)/../Libs/MonoMod.Utils.dll</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
