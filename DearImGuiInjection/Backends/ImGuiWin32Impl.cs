@@ -45,14 +45,10 @@ public static unsafe class ImGuiWin32Impl
         }
 
         if (!Kernel32.QueryPerformanceFrequency(out var perf_frequency))
-        {
             return false;
-        }
 
         if (!Kernel32.QueryPerformanceCounter(out var perf_counter))
-        {
             return false;
-        }
 
         // Setup backend capabilities flags
         io.BackendPlatformName = (byte*)Marshal.StringToHGlobalAnsi("imgui_impl_win32");
@@ -99,16 +95,11 @@ public static unsafe class ImGuiWin32Impl
         return true;
     }
 
-    public static bool ImGui_ImplWin32_Init(void* hwnd)
-    {
-        return ImGui_ImplWin32_InitEx(hwnd, false);
-    }
+    public static bool ImGui_ImplWin32_Init(void* hwnd) => ImGui_ImplWin32_InitEx(hwnd, false);
 
-    public static bool ImGui_ImplWin32_InitForOpenGL(void* hwnd)
-    {
+    public static bool ImGui_ImplWin32_InitForOpenGL(void* hwnd) =>
         // OpenGL needs CS_OWNDC
-        return ImGui_ImplWin32_InitEx(hwnd, true);
-    }
+        ImGui_ImplWin32_InitEx(hwnd, true);
 
     public static void Shutdown()
     {
@@ -122,9 +113,7 @@ public static unsafe class ImGuiWin32Impl
 
         // Unload XInput library
         if (_xInputDLL != IntPtr.Zero)
-        {
             Kernel32.FreeLibrary(_xInputDLL);
-        }
 
         io.BackendPlatformName = null;
         io.BackendPlatformUserData = null;
@@ -139,9 +128,7 @@ public static unsafe class ImGuiWin32Impl
     {
         var io = ImGui.GetIO();
         if ((io.ConfigFlags & ImGuiConfigFlags.NoMouseCursorChange) != 0)
-        {
             return false;
-        }
 
         var imgui_cursor = ImGui.GetMouseCursor();
         if (imgui_cursor == ImGuiMouseCursor.None || io.MouseDrawCursor)
@@ -199,10 +186,7 @@ public static unsafe class ImGuiWin32Impl
         return true;
     }
 
-    private static bool IsVkDown(User32.VirtualKey vk)
-    {
-        return (User32.GetKeyState(vk) & 0x8000) != 0;
-    }
+    private static bool IsVkDown(User32.VirtualKey vk) => (User32.GetKeyState(vk) & 0x8000) != 0;
 
     private static void ImGui_ImplWin32_AddKeyEvent(
         ImGuiKey key,
@@ -220,25 +204,17 @@ public static unsafe class ImGuiWin32Impl
     {
         // Left & right Shift keys: when both are pressed together, Windows tend to not generate the WM_KEYUP event for the first released one.
         if (ImGui.IsKeyDown(ImGuiKey.LeftShift) && !IsVkDown(User32.VirtualKey.VK_LSHIFT))
-        {
             ImGui_ImplWin32_AddKeyEvent(ImGuiKey.LeftShift, false, User32.VirtualKey.VK_LSHIFT);
-        }
 
         if (ImGui.IsKeyDown(ImGuiKey.RightShift) && !IsVkDown(User32.VirtualKey.VK_RSHIFT))
-        {
             ImGui_ImplWin32_AddKeyEvent(ImGuiKey.RightShift, false, User32.VirtualKey.VK_RSHIFT);
-        }
 
         // Sometimes WM_KEYUP for Win key is not passed down to the app (e.g. for Win+V on some setups, according to GLFW).
         if (ImGui.IsKeyDown(ImGuiKey.LeftSuper) && !IsVkDown(User32.VirtualKey.VK_LWIN))
-        {
             ImGui_ImplWin32_AddKeyEvent(ImGuiKey.LeftSuper, false, User32.VirtualKey.VK_LWIN);
-        }
 
         if (ImGui.IsKeyDown(ImGuiKey.RightSuper) && !IsVkDown(User32.VirtualKey.VK_RWIN))
-        {
             ImGui_ImplWin32_AddKeyEvent(ImGuiKey.RightSuper, false, User32.VirtualKey.VK_RWIN);
-        }
     }
 
     public static void ImGui_ImplWin32_UpdateKeyModifiers()
@@ -263,9 +239,7 @@ public static unsafe class ImGuiWin32Impl
             {
                 var pos = new User32.POINT((int)io.MousePos.X, (int)io.MousePos.Y);
                 if (User32.ClientToScreen(_windowHandle, ref pos))
-                {
                     User32.SetCursorPos(pos.X, pos.Y);
-                }
             }
 
             // (Optional) Fallback to provide mouse position when focused (WM_MOUSEMOVE already provides this when hovered or captured)
@@ -274,9 +248,7 @@ public static unsafe class ImGuiWin32Impl
             {
                 User32.POINT pos;
                 if (User32.GetCursorPos(out pos) && User32.ScreenToClient(_windowHandle, ref pos))
-                {
                     io.AddMousePosEvent(pos.X, pos.Y);
-                }
             }
         }
     }
@@ -586,83 +558,46 @@ public static unsafe class ImGuiWin32Impl
     {
         var extra_info = (uint)User32.GetMessageExtraInfo();
         if ((extra_info & 0xFFFFFF80) == 0xFF515700)
-        {
             return ImGuiMouseSource.Pen;
-        }
 
         if ((extra_info & 0xFFFFFF80) == 0xFF515780)
-        {
             return ImGuiMouseSource.TouchScreen;
-        }
 
         return ImGuiMouseSource.Mouse;
     }
 
-    public static int GET_X_LPARAM(IntPtr lp)
-    {
-        return unchecked((short)(long)lp);
-    }
+    public static int GET_X_LPARAM(IntPtr lp) => unchecked((short)(long)lp);
 
-    public static int GET_Y_LPARAM(IntPtr lp)
-    {
-        return unchecked((short)((long)lp >> 16));
-    }
+    public static int GET_Y_LPARAM(IntPtr lp) => unchecked((short)((long)lp >> 16));
 
-    public static ushort HIWORD(IntPtr dwValue)
-    {
-        return unchecked((ushort)((long)dwValue >> 16));
-    }
+    public static ushort HIWORD(IntPtr dwValue) => unchecked((ushort)((long)dwValue >> 16));
 
-    public static ushort HIWORD(UIntPtr dwValue)
-    {
-        return unchecked((ushort)((ulong)dwValue >> 16));
-    }
+    public static ushort HIWORD(UIntPtr dwValue) => unchecked((ushort)((ulong)dwValue >> 16));
 
-    public static ushort LOWORD(IntPtr dwValue)
-    {
-        return unchecked((ushort)(long)dwValue);
-    }
+    public static ushort LOWORD(IntPtr dwValue) => unchecked((ushort)(long)dwValue);
 
-    public static ushort LOWORD(UIntPtr dwValue)
-    {
-        return unchecked((ushort)(ulong)dwValue);
-    }
+    public static ushort LOWORD(UIntPtr dwValue) => unchecked((ushort)(ulong)dwValue);
 
-    public static ushort GET_XBUTTON_WPARAM(UIntPtr val)
-    {
+    public static ushort GET_XBUTTON_WPARAM(UIntPtr val) =>
         // #define GET_XBUTTON_WPARAM(wParam)  (HIWORD(wParam))
-        return HIWORD(val);
-    }
+        HIWORD(val);
 
-    public static ushort GET_XBUTTON_WPARAM(IntPtr val)
-    {
+    public static ushort GET_XBUTTON_WPARAM(IntPtr val) =>
         // #define GET_XBUTTON_WPARAM(wParam)  (HIWORD(wParam))
-        return HIWORD(val);
-    }
+        HIWORD(val);
 
-    internal static int GET_WHEEL_DELTA_WPARAM(IntPtr wParam)
-    {
-        return (short)HIWORD(wParam);
-    }
+    internal static int GET_WHEEL_DELTA_WPARAM(IntPtr wParam) => (short)HIWORD(wParam);
 
-    internal static int GET_WHEEL_DELTA_WPARAM(UIntPtr wParam)
-    {
-        return (short)HIWORD(wParam);
-    }
+    internal static int GET_WHEEL_DELTA_WPARAM(UIntPtr wParam) => (short)HIWORD(wParam);
 
-    public static byte LOBYTE(ushort wValue)
-    {
-        return (byte)(wValue & 0xff);
-    }
+    public static byte LOBYTE(ushort wValue) => (byte)(wValue & 0xff);
 
     // Returs true when system message should be captured, false otherwise
     // Required to not let mouse clicks for example go through ImGui window interactions
     public static bool WndProcHandler(IntPtr hwnd, WindowMessage msg, IntPtr wParam, IntPtr lParam)
     {
         if (ImGui.GetCurrentContext() == ImGuiContextPtr.Null)
-        {
             return false;
-        }
 
         var io = ImGui.GetIO();
 
@@ -686,9 +621,7 @@ public static unsafe class ImGuiWin32Impl
                         0
                     );
                     if (_mouseTrackedArea != 0)
-                    {
                         User32.TrackMouseEvent(ref tme_cancel);
-                    }
 
                     User32.TrackMouseEvent(ref tme_track);
                     _mouseTrackedArea = area;
@@ -699,9 +632,7 @@ public static unsafe class ImGuiWin32Impl
                     msg == WindowMessage.WM_NCMOUSEMOVE
                     && !User32.ScreenToClient(hwnd, ref mouse_pos)
                 ) // WM_NCMOUSEMOVE are provided in absolute coordinates.
-                {
                     break;
-                }
 
                 io.AddMouseSourceEvent(mouse_source);
                 io.AddMousePosEvent(mouse_pos.X, mouse_pos.Y);
@@ -714,9 +645,7 @@ public static unsafe class ImGuiWin32Impl
                 if (_mouseTrackedArea == area)
                 {
                     if (_mouseHandle == hwnd)
-                    {
                         _mouseHandle = IntPtr.Zero;
-                    }
 
                     _mouseTrackedArea = 0;
                     io.AddMousePosEvent(-float.MaxValue, -float.MaxValue);
@@ -736,29 +665,19 @@ public static unsafe class ImGuiWin32Impl
                 var mouse_source = GetMouseSourceFromMessageExtraInfo();
                 var button = 0;
                 if (msg == WindowMessage.WM_LBUTTONDOWN || msg == WindowMessage.WM_LBUTTONDBLCLK)
-                {
                     button = 0;
-                }
 
                 if (msg == WindowMessage.WM_RBUTTONDOWN || msg == WindowMessage.WM_RBUTTONDBLCLK)
-                {
                     button = 1;
-                }
 
                 if (msg == WindowMessage.WM_MBUTTONDOWN || msg == WindowMessage.WM_MBUTTONDBLCLK)
-                {
                     button = 2;
-                }
 
                 if (msg == WindowMessage.WM_XBUTTONDOWN || msg == WindowMessage.WM_XBUTTONDBLCLK)
-                {
                     button = GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? 3 : 4;
-                }
 
                 if (_mouseButtonsDown == 0 && User32.GetCapture() == IntPtr.Zero)
-                {
                     User32.SetCapture(hwnd);
-                }
 
                 _mouseButtonsDown |= 1 << button;
                 io.AddMouseSourceEvent(mouse_source);
@@ -773,30 +692,20 @@ public static unsafe class ImGuiWin32Impl
                 var mouse_source = GetMouseSourceFromMessageExtraInfo();
                 var button = 0;
                 if (msg == WindowMessage.WM_LBUTTONUP)
-                {
                     button = 0;
-                }
 
                 if (msg == WindowMessage.WM_RBUTTONUP)
-                {
                     button = 1;
-                }
 
                 if (msg == WindowMessage.WM_MBUTTONUP)
-                {
                     button = 2;
-                }
 
                 if (msg == WindowMessage.WM_XBUTTONUP)
-                {
                     button = GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? 3 : 4;
-                }
 
                 _mouseButtonsDown &= ~(1 << button);
                 if (_mouseButtonsDown == 0 && User32.GetCapture() == hwnd)
-                {
                     User32.ReleaseCapture();
-                }
 
                 io.AddMouseSourceEvent(mouse_source);
                 io.AddMouseButtonEvent(button, false);
@@ -828,17 +737,13 @@ public static unsafe class ImGuiWin32Impl
                     var hasExtendedKeyFlag =
                         (HIWORD(lParam) & (ushort)User32.KeyFlag.KF_EXTENDED) != 0;
                     if (isEnter && hasExtendedKeyFlag)
-                    {
                         vk = IM_VK_KEYPAD_ENTER;
-                    }
 
                     // Submit key event
                     var key = ImGui_ImplWin32_VirtualKeyToImGuiKey(vk);
                     int scancode = LOBYTE(HIWORD(lParam));
                     if (key != ImGuiKey.None)
-                    {
                         ImGui_ImplWin32_AddKeyEvent(key, is_key_down, vk, scancode);
-                    }
 
                     // Submit individual left/right modifier events
                     if (vk == User32.VirtualKey.VK_SHIFT)
@@ -921,9 +826,7 @@ public static unsafe class ImGuiWin32Impl
                 {
                     // You can also use ToAscii()+GetKeyboardState() to retrieve characters.
                     if ((int)wParam > 0 && (int)wParam < 0x10000)
-                    {
                         io.AddInputCharacterUTF16((ushort)wParam);
-                    }
                 }
                 else
                 {
@@ -950,17 +853,13 @@ public static unsafe class ImGuiWin32Impl
                 const int HTCLIENT = 1;
                 // This is required to restore cursor when transitioning from e.g resize borders to client area.
                 if (LOWORD(lParam) == HTCLIENT && ImGui_ImplWin32_UpdateMouseCursor())
-                {
                     return true;
-                }
 
                 return false;
             case WindowMessage.WM_DEVICECHANGE:
                 const int DBT_DEVNODES_CHANGED = 0x0007;
                 if ((uint)wParam == DBT_DEVNODES_CHANGED)
-                {
                     _wantUpdateHasGamepad = true;
-                }
 
                 return false;
         }
@@ -990,30 +889,22 @@ public static unsafe class ImGuiWin32Impl
             : false;
     }
 
-    private static bool _IsWindowsVistaOrGreater()
-    {
-        return _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0600), LOBYTE(0x0600), 0);
-        // _WIN32_WINNT_VISTA
-    }
+    private static bool _IsWindowsVistaOrGreater() =>
+        _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0600), LOBYTE(0x0600), 0);
 
-    private static bool _IsWindows8OrGreater()
-    {
-        return _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0602), LOBYTE(0x0602), 0);
-        // _WIN32_WINNT_WIN8
-    }
+    // _WIN32_WINNT_VISTA
+    private static bool _IsWindows8OrGreater() =>
+        _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0602), LOBYTE(0x0602), 0);
 
-    private static bool _IsWindows8Point1OrGreater()
-    {
-        return _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0603), LOBYTE(0x0603), 0);
-        // _WIN32_WINNT_WINBLUE
-    }
+    // _WIN32_WINNT_WIN8
+    private static bool _IsWindows8Point1OrGreater() =>
+        _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0603), LOBYTE(0x0603), 0);
 
-    private static bool _IsWindows10OrGreater()
-    {
-        return _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0A00), LOBYTE(0x0A00), 0);
-        // _WIN32_WINNT_WINTHRESHOLD / _WIN32_WINNT_WIN10
-    }
+    // _WIN32_WINNT_WINBLUE
+    private static bool _IsWindows10OrGreater() =>
+        _IsWindowsVersionOrGreater((short)Kernel32.HiByte(0x0A00), LOBYTE(0x0A00), 0);
 
+    // _WIN32_WINNT_WINTHRESHOLD / _WIN32_WINNT_WIN10
     // Helper function to enable DPI awareness without setting up a manifest
     private static void ImGui_ImplWin32_EnableDpiAwareness()
     {
@@ -1070,39 +961,32 @@ public static unsafe class ImGuiWin32Impl
     public static void ImGui_ImplWin32_EnableAlphaCompositing(void* hwnd)
     {
         if (!_IsWindowsVistaOrGreater())
-        {
             return;
-        }
 
-        var hres = Dwmapi.DwmIsCompositionEnabled(out var composition);
+        var hres = DwmApi.DwmIsCompositionEnabled(out var composition);
 
         if (hres != 0 || !composition)
-        {
             return;
-        }
 
-        hres = Dwmapi.DwmGetColorizationColor(out var color, out var opaque);
+        hres = DwmApi.DwmGetColorizationColor(out var color, out var opaque);
 
         if (_IsWindows8OrGreater() || (hres == 0 && !opaque))
         {
             var region = Gdi32.CreateRectRgn(0, 0, -1, -1);
-            Dwmapi.DWM_BLURBEHIND bb = new(true);
-            bb.dwFlags |= Dwmapi.DWM_BB.BlurRegion;
+            DwmApi.DwmBlurBehind bb = new(true);
+            bb.dwFlags |= DwmApi.DwmBb.BlurRegion;
             bb.hRgnBlur = region;
-            Dwmapi.DwmEnableBlurBehindWindow((IntPtr)hwnd, ref bb);
+            DwmApi.DwmEnableBlurBehindWindow((IntPtr)hwnd, ref bb);
             Gdi32.DeleteObject(region);
         }
         else
         {
-            Dwmapi.DWM_BLURBEHIND bb = new(true);
-            Dwmapi.DwmEnableBlurBehindWindow((IntPtr)hwnd, ref bb);
+            DwmApi.DwmBlurBehind bb = new(true);
+            DwmApi.DwmEnableBlurBehindWindow((IntPtr)hwnd, ref bb);
         }
     }
 
-    internal static void Init(IntPtr windowHandle)
-    {
-        ImGui_ImplWin32_Init((void*)windowHandle);
-    }
+    internal static void Init(IntPtr windowHandle) => ImGui_ImplWin32_Init((void*)windowHandle);
 
     private delegate uint XInputGetCapabilitiesDelegate(uint a, uint b, IntPtr c);
 

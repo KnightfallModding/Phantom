@@ -1274,7 +1274,7 @@ public enum WindowMessage : uint
 
     /// <summary>
     /// WM_DWMNCRENDERINGCHANGED is called when the non-client area rendering status of a window has changed. Only windows that have
-    /// set the flag DWM_BLURBEHIND.fTransitionOnMaximized to true will get this message.
+    /// set the flag DwmBlurBehind.fTransitionOnMaximized to true will get this message.
     /// </summary>
     WM_DWMNCRENDERINGCHANGED = 0x031F,
 

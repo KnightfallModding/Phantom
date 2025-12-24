@@ -8,9 +8,8 @@ namespace Phantom.GUI;
 
 public class Overlay
 {
+    private readonly Stopwatch _easterEggstopWatch = new();
     private readonly Stopwatch _stopwatch;
-
-    private readonly Stopwatch easterEggstopWatch = new();
     private float _delayMs;
     private int _fpsLimit;
     private bool _initialized;
@@ -19,8 +18,8 @@ public class Overlay
     private ITheme _theme;
 #pragma warning restore CA1859
 
-    public ImFontPtr mergedFont;
-    public ImFontPtr normalFont;
+    public ImFontPtr MergedFont;
+    public ImFontPtr NormalFont;
 
     public Overlay(int fpsLimit = 60)
     {
@@ -60,19 +59,19 @@ public class Overlay
     public unsafe void LoadFonts()
     {
         var fontsPath = Path.Join(MelonEnvironment.PluginsDirectory, "Phantom", "Fonts");
-        var normalFontPath = Path.Join(fontsPath, "Comfortaa-Medium.ttf");
+        var NormalFontPath = Path.Join(fontsPath, "Comfortaa-Medium.ttf");
         var emojisFontPath = Path.Join(fontsPath, "Twemoji.ttf");
 
         var fontConfig = ImGui.ImFontConfig();
         fontConfig.MergeMode = true;
         fontConfig.FontLoaderFlags = (uint)ImGuiFreeTypeLoaderFlags.LoadColor;
 
-        normalFont = _io.Fonts.AddFontFromFileTTF(normalFontPath, 16);
-        mergedFont = _io.Fonts.AddFontFromFileTTF(emojisFontPath, 16, fontConfig);
+        NormalFont = _io.Fonts.AddFontFromFileTTF(NormalFontPath, 16);
+        MergedFont = _io.Fonts.AddFontFromFileTTF(emojisFontPath, 16, fontConfig);
 
         _io.ConfigDpiScaleFonts = true;
         _io.ConfigDpiScaleViewports = true;
-        _io.FontDefault = mergedFont;
+        _io.FontDefault = MergedFont;
     }
 
     public void LoadDefaultTheme()
@@ -97,7 +96,7 @@ public class Overlay
         if (!_initialized)
             Init();
 
-        ImGui.PushFont(mergedFont, 16);
+        ImGui.PushFont(MergedFont, 16);
         ImGui.ShowDemoWindow();
         if (ImGui.Button($"Toggle 30-60 FPS (Currently {FPSLimit}##ToggleFPS"))
             FPSLimit = FPSLimit == 60 ? 30 : 60;
@@ -123,7 +122,7 @@ public class Overlay
             ImGui.EndTooltip();
         }
 
-        var elapsedMs = easterEggstopWatch.Elapsed.TotalMilliseconds;
+        var elapsedMs = _easterEggstopWatch.Elapsed.TotalMilliseconds;
         if (elapsedMs is > 0 and < 200)
         {
             ImGui.Begin(
@@ -144,12 +143,12 @@ public class Overlay
         }
         else
         {
-            easterEggstopWatch.Reset();
-            easterEggstopWatch.Stop();
+            _easterEggstopWatch.Reset();
+            _easterEggstopWatch.Stop();
         }
 
         if (button)
-            easterEggstopWatch.Restart();
+            _easterEggstopWatch.Restart();
 
         ImGui.End();
     }

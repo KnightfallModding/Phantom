@@ -43,6 +43,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hexa.NET.ImGui" Version="2.2.9" PrivateAssets="all" />
+
     <PackageReference Include="Harmonize" Version="1.*">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

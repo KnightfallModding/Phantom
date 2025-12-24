@@ -11,14 +11,14 @@ namespace DearImGuiInjection.Backends;
 
 internal static class ImGuiDX11
 {
-    private const int GWL_WNDPROC = -4;
+    private const int GwlWndproc = -4;
     private static IntPtr _windowHandle;
 
     private static ComPtr<SilkD3D11.ID3D11RenderTargetView> _renderTargetView;
     private static User32.WndProcDelegate _myWindowProc;
     private static IntPtr _originalWindowProc;
 
-    private static ComPtr<SilkD3D11.ID3D11DeviceContext> _deviceContext;
+    private static readonly ComPtr<SilkD3D11.ID3D11DeviceContext> DeviceContext = default;
 
     internal static void Init()
     {
@@ -37,7 +37,7 @@ internal static class ImGuiDX11
         DX11Renderer.PreResizeBuffers -= PreResizeBuffers;
         DX11Renderer.OnPresent -= RenderImGui;
 
-        User32.SetWindowLong(_windowHandle, GWL_WNDPROC, _originalWindowProc);
+        User32.SetWindowLong(_windowHandle, GwlWndproc, _originalWindowProc);
 
         ImGuiWin32Impl.Shutdown();
 
@@ -87,7 +87,7 @@ internal static class ImGuiDX11
         _myWindowProc = WndProcHandler;
         _originalWindowProc = User32.SetWindowLong(
             windowHandle,
-            GWL_WNDPROC,
+            GwlWndproc,
             Marshal.GetFunctionPointerForDelegate(_myWindowProc)
         );
     }
@@ -96,7 +96,7 @@ internal static class ImGuiDX11
     {
         var device = InitImGuiDX11Internal(swapChain);
 
-        ImGuiDX11Impl.Init(device.Handle, _deviceContext.Handle);
+        ImGuiDX11Impl.Init(device.Handle, DeviceContext.Handle);
     }
 
     private static unsafe ComPtr<SilkD3D11.ID3D11Device> InitImGuiDX11Internal(
@@ -107,7 +107,7 @@ internal static class ImGuiDX11
         var deviceGuid = SilkD3D11.ID3D11Device.Guid;
         swapChain.Get().GetDevice(&deviceGuid, (void**)&device);
 
-        device.Get().GetImmediateContext(_deviceContext.GetAddressOf());
+        device.Get().GetImmediateContext(DeviceContext.GetAddressOf());
 
         ComPtr<SilkD3D11.ID3D11Texture2D> backBuffer = default;
         fixed (Guid* guid = &SilkD3D11.ID3D11Device.Guid)
@@ -163,7 +163,7 @@ internal static class ImGuiDX11
 
         NewFrame();
 
-        _deviceContext.Get().OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), null);
+        DeviceContext.Get().OMSetRenderTargets(1, _renderTargetView.GetAddressOf(), null);
 
         var drawData = ImGui.GetDrawData();
         ImGuiDX11Impl.RenderDrawData(drawData);
@@ -184,7 +184,9 @@ internal static class ImGuiDX11
 
         if (ImGuiInjector.RenderAction != null)
         {
-            foreach (Action item in ImGuiInjector.RenderAction.GetInvocationList())
+            foreach (var @delegate in ImGuiInjector.RenderAction.GetInvocationList())
+            {
+                var item = (Action)@delegate;
                 try
                 {
                     item();
@@ -193,6 +195,7 @@ internal static class ImGuiDX11
                 {
                     DearImGuiInjectionLogger.Error(e);
                 }
+            }
         }
 
         ImGui.EndFrame();
