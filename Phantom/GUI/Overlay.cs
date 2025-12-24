@@ -98,7 +98,9 @@ public class Overlay
             Init();
 
         ImGui.PushFont(MergedFont, 16);
+#if DEBUG
         ImGui.ShowDemoWindow();
+#endif
         if (ImGui.Button($"Toggle 30-60 FPS (Currently {FPSLimit}##ToggleFPS"))
             FPSLimit = FPSLimit == 60 ? 30 : 60;
         ImGui.Text("There is a secret in the main menu. Can you find it?");
