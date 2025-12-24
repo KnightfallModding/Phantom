@@ -42,7 +42,6 @@ public static class ImGuiInjector
         remove => RenderAction -= value;
     }
 
-    // TODO: Replace with MelonLogger.Instance
     public static void Init(
         string imguiIniConfigDirectoryPath,
         string assetsFolder,
@@ -107,16 +106,10 @@ public static class ImGuiInjector
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void InitImGuiDX11()
-    {
-        ImGuiDX11.Init();
-    }
+    private static void InitImGuiDX11() => ImGuiDX11.Init();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void InitImGuiDX12()
-    {
-        ImGuiDX12.Init();
-    }
+    private static void InitImGuiDX12() => ImGuiDX12.Init();
 
     private static void DisposeImplementationFromRendererKind(RendererKind rendererKind)
     {

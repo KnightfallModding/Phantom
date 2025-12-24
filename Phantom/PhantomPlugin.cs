@@ -31,13 +31,11 @@ public class PhantomPlugin : MelonPlugin
 
     private static void SetupOverlay()
     {
-        // TODO: Replace `Paths` with `MelonEnvironments`
         // `Hexa.NET.ImGui` won't find `cimgui` without specifying the path
         var cimguiPath = Path.Join(MelonEnvironment.PluginsDirectory, "Libraries");
         LibraryLoader.CustomLoadFolders.Add(cimguiPath);
 
         var overlay = new Overlay();
-        // TODO: Replace `Paths` with `MelonEnvironments`
         var imGuiConfigPath = MelonEnvironment.GameRootDirectory;
         var assetsFolder = Path.Join(MelonEnvironment.PluginsDirectory, PhantomInfo.Name, "Assets");
         ImGuiInjector.Init(imGuiConfigPath, assetsFolder, Logger);

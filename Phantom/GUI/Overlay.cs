@@ -15,7 +15,8 @@ public class Overlay
     private bool _initialized;
     private ImGuiIOPtr _io;
 #pragma warning disable CA1859 // Impossible to know what theme will be used.
-    private ITheme _theme;
+    // ReSharper disable once NullableWarningSuppressionIsUsed
+    private ITheme _theme = null!;
 #pragma warning restore CA1859
 
     public ImFontPtr MergedFont;
@@ -59,14 +60,14 @@ public class Overlay
     public unsafe void LoadFonts()
     {
         var fontsPath = Path.Join(MelonEnvironment.PluginsDirectory, "Phantom", "Fonts");
-        var NormalFontPath = Path.Join(fontsPath, "Comfortaa-Medium.ttf");
+        var normalFontPath = Path.Join(fontsPath, "Comfortaa-Medium.ttf");
         var emojisFontPath = Path.Join(fontsPath, "Twemoji.ttf");
 
         var fontConfig = ImGui.ImFontConfig();
         fontConfig.MergeMode = true;
         fontConfig.FontLoaderFlags = (uint)ImGuiFreeTypeLoaderFlags.LoadColor;
 
-        NormalFont = _io.Fonts.AddFontFromFileTTF(NormalFontPath, 16);
+        NormalFont = _io.Fonts.AddFontFromFileTTF(normalFontPath, 16);
         MergedFont = _io.Fonts.AddFontFromFileTTF(emojisFontPath, 16, fontConfig);
 
         _io.ConfigDpiScaleFonts = true;
