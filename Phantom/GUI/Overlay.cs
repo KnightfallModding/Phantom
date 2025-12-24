@@ -1,8 +1,9 @@
 using System.Diagnostics;
-using System.Numerics;
 using Hexa.NET.ImGui;
 using MelonLoader.Utils;
 using Phantom.GUI.Themes;
+using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Phantom.GUI;
 
@@ -101,15 +102,28 @@ public class Overlay
 #if DEBUG
         ImGui.ShowDemoWindow();
 #endif
+        ImGui.SetNextWindowPos(new Vector2(0, 0));
+        ImGui.Begin(
+            PhantomInfo.Name,
+            ImGuiWindowFlags.AlwaysAutoResize
+                | ImGuiWindowFlags.NoCollapse
+                | ImGuiWindowFlags.NoMove
+                | ImGuiWindowFlags.NoSavedSettings
+                | ImGuiWindowFlags.NoTitleBar
+                | ImGuiWindowFlags.NoResize
+        );
         if (ImGui.Button($"Toggle 30-60 FPS (Currently {FPSLimit}##ToggleFPS"))
             FPSLimit = FPSLimit == 60 ? 30 : 60;
         ImGui.Text("There is a secret in the main menu. Can you find it?");
-        CreateEasterEgg();
         ImGui.PopFont();
+        ImGui.End();
+
+        CreateEasterEgg();
     }
 
     private void CreateEasterEgg()
     {
+        ImGui.SetNextWindowPos(new Vector2(Screen.width - 100, Screen.height - 100));
         ImGui.Begin(
             "EasterEgg",
             ImGuiWindowFlags.NoBackground
@@ -117,7 +131,11 @@ public class Overlay
                 | ImGuiWindowFlags.NoDecoration
                 | ImGuiWindowFlags.NoSavedSettings
         );
+#if DEBUG
+        var button = ImGui.Button(" ##EasterEgg", new Vector2(50, 50));
+#else
         var button = ImGui.InvisibleButton(" ##EasterEgg", new Vector2(20, 20));
+#endif
         if (ImGui.IsItemHovered())
         {
             ImGui.BeginTooltip();
@@ -128,19 +146,17 @@ public class Overlay
         var elapsedMs = _easterEggstopWatch.Elapsed.TotalMilliseconds;
         if (elapsedMs is > 0 and < 200)
         {
-            ImGui.Begin(
-                "EasterEggFound",
-                ImGuiWindowFlags.AlwaysAutoResize
-                    | ImGuiWindowFlags.NoCollapse
-                    | ImGuiWindowFlags.NoResize
-                    | ImGuiWindowFlags.NoSavedSettings
-            );
+            ImGui.Begin(" ##EasterEggFound", ImGuiWindowFlags.NoCollapse);
             ImGui.Text("YOU FOUND THE EASTER EGG 🎉");
             ImGui.Text("For this you win... Nothing! But congrats!");
             ImGui.PushFont(null, 8);
             ImGui.Text(
                 "Fine... You get... Me to congratulate you personally, if you can catch a screenshot of me!"
             );
+            var size = ImGui.GetWindowSize();
+            var width = Screen.width - 50 - size.X;
+            var height = Screen.height - 200 - size.Y;
+            ImGui.SetWindowPos(new Vector2(width, height));
             ImGui.PopFont();
             ImGui.End();
         }
